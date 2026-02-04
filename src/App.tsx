@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Header } from './components/Header';
+import { Footer } from './components/Footer';
+import { CookieConsent } from './components/CookieConsent';
 import { MarketDetail } from './components/MarketDetail';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { FilterBar } from './components/FilterBar';
@@ -166,10 +168,10 @@ function App() {
   }, [searchResults, selectedCategory, selectedStatus]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+      <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 w-full">
         <div className="text-center mb-8 sm:mb-12 lg:mb-16">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black mb-3 sm:mb-4 tracking-tight">
             AI-Powered Polymarket Analysis
@@ -357,6 +359,9 @@ function App() {
           onClose={() => setSelectedMarket(null)}
         />
       )}
+
+      <Footer />
+      <CookieConsent />
     </div>
   );
 }
