@@ -218,7 +218,7 @@ function App() {
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search markets..."
+                placeholder="Search markets... Search Tips: Copy market titles from Polymarket"
                 className="w-full pl-12 sm:pl-14 pr-4 sm:pr-6 py-4 sm:py-5 text-base sm:text-lg glass-strong rounded-2xl border-2 border-black/20 focus:outline-none focus:border-[#1552F0] focus:ring-4 focus:ring-[#1552F0]/20 transition-all text-black placeholder-black/50 font-medium shadow-lg"
                 disabled={searching}
                 aria-label="Search for prediction markets"
