@@ -18,7 +18,7 @@ export function Header({ onRefresh, isRefreshing }: HeaderProps) {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <button className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 text-black hover:text-[#1552F0] font-medium transition-colors">
+            <button className="flex items-center gap-2 px-4 sm:px-6 py-1 sm:py-2.5 text-black hover:text-[#1552F0] transition-colors">
               <span className="hidden sm:inline">Login</span>
             </button>
             <button className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-medium rounded-xl transition-all shadow-md border-2 border-[#1552F0]">
