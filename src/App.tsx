@@ -1,13 +1,17 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { CookieConsent } from './components/CookieConsent';
+import { Login } from './components/Login';
+import { Signup } from './components/Signup';
 import { MarketDetail } from './components/MarketDetail';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { FilterBar } from './components/FilterBar';
 import { DataSyncService } from './services/data-sync.service';
 import { PolymarketService } from './services/polymarket.service';
+import { supabase } from './lib/supabase';
 import { Search, TrendingUp, DollarSign, Users, Sparkles } from 'lucide-react';
+import type { User } from '@supabase/supabase-js';
 
 interface Market {
   id: string;
@@ -36,6 +40,9 @@ interface Analysis {
 }
 
 function App() {
+  const [user, setUser] = useState<User | null>(null);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searching, setSearching] = useState(false);
   const [analyzingMarketId, setAnalyzingMarketId] = useState<string | null>(null);
@@ -44,6 +51,22 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'active' | 'closed'>('all');
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      (async () => {
+        setUser(session?.user ?? null);
+      })();
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -169,7 +192,11 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Header
+        user={user}
+        onLoginClick={() => setShowLogin(true)}
+        onSignupClick={() => setShowSignup(true)}
+      />
 
       <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 w-full">
         <div className="text-center mb-8 sm:mb-12 lg:mb-16">
@@ -357,6 +384,26 @@ function App() {
           market={selectedMarket.market}
           analysis={selectedMarket.analysis}
           onClose={() => setSelectedMarket(null)}
+        />
+      )}
+
+      {showLogin && (
+        <Login
+          onClose={() => setShowLogin(false)}
+          onSwitchToSignup={() => {
+            setShowLogin(false);
+            setShowSignup(true);
+          }}
+        />
+      )}
+
+      {showSignup && (
+        <Signup
+          onClose={() => setShowSignup(false)}
+          onSwitchToLogin={() => {
+            setShowSignup(false);
+            setShowLogin(true);
+          }}
         />
       )}
 
