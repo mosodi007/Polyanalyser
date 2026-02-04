@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Header } from './components/Header';
 import { MarketDetail } from './components/MarketDetail';
 import { LoadingSpinner } from './components/LoadingSpinner';
+import { FilterBar } from './components/FilterBar';
 import { DataSyncService } from './services/data-sync.service';
 import { PolymarketService } from './services/polymarket.service';
 import { Search, TrendingUp, DollarSign, Users, Sparkles } from 'lucide-react';
@@ -39,6 +40,8 @@ function App() {
   const [searchResults, setSearchResults] = useState<Market[]>([]);
   const [selectedMarket, setSelectedMarket] = useState<{ market: Market; analysis?: Analysis } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedStatus, setSelectedStatus] = useState<'all' | 'active' | 'closed'>('all');
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +51,8 @@ function App() {
     setSearching(true);
     setError(null);
     setSearchResults([]);
+    setSelectedCategory('all');
+    setSelectedStatus('all');
 
     try {
       console.log('📞 Calling PolymarketService.searchMarkets...');
@@ -136,6 +141,30 @@ function App() {
     return `$${volume.toFixed(0)}`;
   };
 
+  const categories = useMemo(() => {
+    const uniqueCategories = new Set<string>();
+    searchResults.forEach((market) => {
+      if (market.category) {
+        uniqueCategories.add(market.category);
+      }
+    });
+    return Array.from(uniqueCategories).sort();
+  }, [searchResults]);
+
+  const filteredResults = useMemo(() => {
+    return searchResults.filter((market) => {
+      const categoryMatch =
+        selectedCategory === 'all' || market.category === selectedCategory;
+
+      const statusMatch =
+        selectedStatus === 'all' ||
+        (selectedStatus === 'active' && market.active && !market.closed) ||
+        (selectedStatus === 'closed' && market.closed);
+
+      return categoryMatch && statusMatch;
+    });
+  }, [searchResults, selectedCategory, selectedStatus]);
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -199,8 +228,24 @@ function App() {
         )}
 
         {!searching && searchResults.length > 0 && (
-          <section className="space-y-4" aria-label="Search results" role="region">
-            {searchResults.map((market) => (
+          <>
+            <FilterBar
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+              selectedStatus={selectedStatus}
+              onStatusChange={setSelectedStatus}
+              resultCount={filteredResults.length}
+            />
+
+            {filteredResults.length === 0 ? (
+              <div className="text-center py-12 glass-strong rounded-2xl">
+                <p className="text-black/60 text-lg">No markets match your filters</p>
+                <p className="text-black/50 text-sm mt-2">Try adjusting your filter settings</p>
+              </div>
+            ) : (
+              <section className="space-y-4" aria-label="Search results" role="region">
+                {filteredResults.map((market) => (
               <article
                 key={market.id}
                 className="glass-white rounded-2xl p-8 hover:shadow-2xl transition-all"
@@ -285,8 +330,10 @@ function App() {
                   </button>
                 </div>
               </article>
-            ))}
-          </section>
+                ))}
+              </section>
+            )}
+          </>
         )}
 
         {!searching && searchResults.length === 0 && !error && searchQuery && (
