@@ -39,8 +39,8 @@ export function Header({ user, onLoginClick, onSignupClick }: HeaderProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
-            <img src="/polyanalyser.png" alt="PolyAnalyser - AI-Powered Polymarket Analysis" className="w-8 h-8 sm:w-10 sm:h-10" />
-            <div className="text-xl sm:text-2xl font-bold tracking-tight text-black">
+            <img src="/polyanalyser.png" alt="PolyAnalyser - AI-Powered Polymarket Analysis" className="w-6 h-6 sm:w-7 sm:h-7" />
+            <div className="text-xl sm:text-xl font-semibold tracking-tight text-black">
               Polyanalyser
             </div>
           </div>
@@ -79,17 +79,16 @@ export function Header({ user, onLoginClick, onSignupClick }: HeaderProps) {
               <>
                 <button
                   onClick={onLoginClick}
-                  className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 text-black hover:text-[#1552F0] font-medium transition-colors"
+                  className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 hover:text-[#1552F0] font-medium transition-colors"
                 >
                   <LogIn className="w-4 h-4" />
                   <span className="hidden sm:inline">Login</span>
                 </button>
                 <button
                   onClick={onSignupClick}
-                  className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-medium rounded-xl transition-all shadow-md border-2 border-[#1552F0]"
+                  className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 bg-[#000] hover:bg-[#0f3ec4] text-white rounded-3xl"
                 >
-                  <UserPlus className="w-4 h-4" />
-                  <span className="hidden sm:inline">Sign up</span>
+                  <span className="hidden sm:inline">Sign up for free</span>
                 </button>
               </>
             )}
