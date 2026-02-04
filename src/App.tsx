@@ -200,7 +200,7 @@ function App() {
 
       <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 w-full">
         <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-          <h1 className="text-3xl sm:text-4xl lg:text-7xl font-bold text-black mb-3 sm:mb-4 tracking-tight">
+          <h1 className="text-6xl sm:text-4xl lg:text-7xl font-bold text-black mb-3 sm:mb-4 tracking-tight">
             AI-Powered Polymarket Analysis
           </h1>
           <p className="text-base sm:text-lg text-black/70 max-w-2xl mx-auto font-semibold px-4">
