@@ -12,7 +12,7 @@ export function Header({ onRefresh, isRefreshing }: HeaderProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
             <img src="/polyanalyser.png" alt="PolyAnalyser - AI-Powered Polymarket Analysis" className="w-8 h-8 sm:w-10 sm:h-10" />
-            <div className="text-xl sm:text-2xl font-bold tracking-tight text-black">
+            <div className="text-xl sm:text-xl font-bold tracking-tight text-black">
               Polyanalyser
             </div>
           </div>
