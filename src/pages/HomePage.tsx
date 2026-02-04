@@ -17,6 +17,13 @@ export function HomePage() {
     <div className="min-h-[calc(100vh-200px)] flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-2xl">
         <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <img
+              src="/polyanalyser.png"
+              alt="PolyAnalyser"
+              className="w-16 h-16 sm:w-20 sm:h-20"
+            />
+          </div>
           <h1 className="text-6xl sm:text-7xl font-bold text-black mb-4 tracking-tight">
             PolyAnalyser
           </h1>

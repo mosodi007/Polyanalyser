@@ -182,6 +182,11 @@ export function SearchResultsPage() {
               className="flex items-center gap-2 text-black hover:text-black/70 transition-colors"
             >
               <ChevronLeft className="w-5 h-5" />
+              <img
+                src="/polyanalyser.png"
+                alt="PolyAnalyser"
+                className="w-6 h-6"
+              />
               <span className="text-xl font-bold">PolyAnalyser</span>
             </button>
 
