@@ -79,9 +79,8 @@ export function Header({ user, onLoginClick, onSignupClick }: HeaderProps) {
               <>
                 <button
                   onClick={onLoginClick}
-                  className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 hover:text-[#1552F0] font-medium transition-colors"
+                  className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 text-black hover:text-[#1552F0] font-medium transition-colors"
                 >
-                  <LogIn className="w-4 h-4" />
                   <span className="hidden sm:inline">Login</span>
                 </button>
                 <button
