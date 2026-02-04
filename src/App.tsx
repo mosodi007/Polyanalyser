@@ -219,7 +219,7 @@ function App() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search Polymarket ..."
-                className="w-full pl-12 sm:pl-14 pr-4 sm:pr-6 py-4 sm:py-5 text-base sm:text-lg glass-strong rounded-2xl border-5 border-black focus:outline-none focus:border-[#1552F0] focus:ring-4 focus:ring-[#1552F0]/20 transition-all text-black placeholder-black/50 font-medium"
+                className="w-full pl-12 sm:pl-14 pr-4 sm:pr-6 py-4 sm:py-5 text-base sm:text-lg glass-strong rounded-2xl border-2 border-black focus:outline-none focus:border-[#1552F0] focus:ring-4 focus:ring-[#1552F0]/20 transition-all text-black placeholder-black/50 font-medium"
                 disabled={searching}
                 aria-label="Search for prediction markets"
               />
@@ -227,7 +227,7 @@ function App() {
             <button
               type="submit"
               disabled={searching || !searchQuery.trim()}
-              className="w-full sm:w-auto px-8 py-4 sm:py-5 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-semibold rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg border-2 border-[#1552F0] hover:border-[#0f3ec4]"
+              className="w-full sm:w-auto px-8 py-4 sm:py-5 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-semibold rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed border-2 border-[#1552F0] hover:border-[#0f3ec4]"
               aria-label="Submit search"
             >
               {searching ? 'Searching...' : 'Search'}
