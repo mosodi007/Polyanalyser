@@ -235,7 +235,7 @@ function App() {
           </div>
         </form>
 
-        {!searching && searchResults.length === 0 && !error && !searchQuery && (
+        {/* {!searching && searchResults.length === 0 && !error && !searchQuery && (
           <div className="mb-8 sm:mb-12 p-6 sm:p-8 glass-strong rounded-2xl">
             <h3 className="text-sm font-medium text-black mb-3">Search Tips</h3>
             <ul className="text-sm text-black/70 space-y-2">
@@ -244,7 +244,7 @@ function App() {
               <li>• Search includes both active and closed markets</li>
             </ul>
           </div>
-        )}
+        )} */}
 
         {error && (
           <div className="mb-6 sm:mb-8 p-4 sm:p-6 glass-strong rounded-2xl text-black border-red-500/30 text-sm sm:text-base">
