@@ -169,34 +169,36 @@ function App() {
     <div className="min-h-screen">
       <Header />
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-black mb-4 tracking-tight">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black mb-3 sm:mb-4 tracking-tight">
             AI-Powered Polymarket Analysis
           </h1>
-          <p className="text-lg text-black/70 max-w-2xl mx-auto font-semibold">
+          <p className="text-base sm:text-lg text-black/70 max-w-2xl mx-auto font-semibold px-4">
             Search prediction markets, get instant AI analysis, and make data-driven trading decisions on Polymarket with advanced market intelligence and probability assessments
           </p>
         </div>
 
-        <form onSubmit={handleSearch} className="mb-12" role="search" aria-label="Search prediction markets">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-black/40" aria-hidden="true" />
+        <form onSubmit={handleSearch} className="mb-8 sm:mb-12" role="search" aria-label="Search prediction markets">
+          <div className="relative flex flex-col sm:flex-row gap-2">
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-4 sm:pl-6 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-black/40" aria-hidden="true" />
+              </div>
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search markets..."
+                className="w-full pl-12 sm:pl-14 pr-4 sm:pr-6 py-4 sm:py-5 text-base sm:text-lg glass-strong rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1552F0]/50 transition-all text-black placeholder-black/50"
+                disabled={searching}
+                aria-label="Search for prediction markets"
+              />
             </div>
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search markets..."
-              className="w-full pl-14 pr-36 py-5 text-lg glass-strong rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1552F0]/50 transition-all text-black placeholder-black/50"
-              disabled={searching}
-              aria-label="Search for prediction markets"
-            />
             <button
               type="submit"
               disabled={searching || !searchQuery.trim()}
-              className="absolute right-2 top-2 px-8 py-3 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-medium rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-8 py-4 sm:py-5 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-medium rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Submit search"
             >
               {searching ? 'Searching...' : 'Search'}
@@ -205,7 +207,7 @@ function App() {
         </form>
 
         {!searching && searchResults.length === 0 && !error && !searchQuery && (
-          <div className="mb-12 p-8 glass-strong rounded-2xl">
+          <div className="mb-8 sm:mb-12 p-6 sm:p-8 glass-strong rounded-2xl">
             <h3 className="text-sm font-medium text-black mb-3">Search Tips</h3>
             <ul className="text-sm text-black/70 space-y-2">
               <li>• Copy market titles from Polymarket for exact matches</li>
@@ -216,7 +218,7 @@ function App() {
         )}
 
         {error && (
-          <div className="mb-8 p-6 glass-strong rounded-2xl text-black border-red-500/30">
+          <div className="mb-6 sm:mb-8 p-4 sm:p-6 glass-strong rounded-2xl text-black border-red-500/30 text-sm sm:text-base">
             {error}
           </div>
         )}
@@ -239,50 +241,50 @@ function App() {
             />
 
             {filteredResults.length === 0 ? (
-              <div className="text-center py-12 glass-strong rounded-2xl">
-                <p className="text-black/60 text-lg">No markets match your filters</p>
-                <p className="text-black/50 text-sm mt-2">Try adjusting your filter settings</p>
+              <div className="text-center py-8 sm:py-12 glass-strong rounded-2xl">
+                <p className="text-black/60 text-base sm:text-lg">No markets match your filters</p>
+                <p className="text-black/50 text-xs sm:text-sm mt-2">Try adjusting your filter settings</p>
               </div>
             ) : (
-              <section className="space-y-4" aria-label="Search results" role="region">
+              <section className="space-y-3 sm:space-y-4" aria-label="Search results" role="region">
                 {filteredResults.map((market) => (
               <article
                 key={market.id}
-                className="glass-white rounded-2xl p-8 hover:shadow-2xl transition-all"
+                className="glass-white rounded-2xl p-4 sm:p-6 lg:p-8 hover:shadow-2xl transition-all"
                 itemScope
                 itemType="https://schema.org/Product"
               >
-                <div className="flex items-start justify-between gap-6">
-                  <div className="flex-1">
-                    <div className="flex items-start gap-3 mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
                       {market.category && (
-                        <span className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium glass text-black/70">
+                        <span className="inline-flex items-center px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs font-medium glass text-black/70">
                           {market.category}
                         </span>
                       )}
                       {market.closed && (
-                        <span className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium bg-red-500/20 text-black border border-red-500/30">
+                        <span className="inline-flex items-center px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs font-medium bg-red-500/20 text-black border border-red-500/30">
                           Closed
                         </span>
                       )}
                       {market.active && !market.closed && (
-                        <span className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium bg-emerald-500/20 text-black border border-emerald-500/30">
+                        <span className="inline-flex items-center px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs font-medium bg-emerald-500/20 text-black border border-emerald-500/30">
                           Active
                         </span>
                       )}
                     </div>
 
-                    <h2 className="text-2xl font-normal text-black mb-3" itemProp="name">
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-normal text-black mb-2 sm:mb-3" itemProp="name">
                       {market.title}
                     </h2>
 
                     {market.description && (
-                      <p className="text-black/60 mb-6 line-clamp-2" itemProp="description">
+                      <p className="text-sm sm:text-base text-black/60 mb-4 sm:mb-6 line-clamp-2" itemProp="description">
                         {market.description}
                       </p>
                     )}
 
-                    <div className="flex flex-wrap items-center gap-6 text-sm">
+                    <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm">
                       <div className="flex items-center gap-2">
                         <TrendingUp className="w-4 h-4 text-black/50" />
                         <span className="font-medium text-black">
@@ -310,7 +312,7 @@ function App() {
                   <button
                     onClick={() => handleAnalyze(market)}
                     disabled={analyzingMarketId === market.id}
-                    className="relative flex items-center gap-2 px-8 py-4 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-medium rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg whitespace-nowrap overflow-hidden"
+                    className="relative flex items-center justify-center gap-2 w-full sm:w-auto sm:min-w-[140px] px-6 sm:px-8 py-3 sm:py-4 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-medium rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg overflow-hidden"
                   >
                     {analyzingMarketId === market.id && (
                       <div className="absolute inset-0 bg-white/20">
