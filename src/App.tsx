@@ -180,17 +180,17 @@ function App() {
         </div>
 
         <form onSubmit={handleSearch} className="mb-8 sm:mb-12" role="search" aria-label="Search prediction markets">
-          <div className="relative flex flex-col sm:flex-row gap-2">
+          <div className="relative flex flex-col sm:flex-row gap-2 sm:gap-3">
             <div className="relative flex-1">
               <div className="absolute inset-y-0 left-0 pl-4 sm:pl-6 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-black/40" aria-hidden="true" />
+                <Search className="h-5 w-5 sm:h-6 sm:w-6 text-black/50" aria-hidden="true" />
               </div>
               <input
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search markets..."
-                className="w-full pl-12 sm:pl-14 pr-4 sm:pr-6 py-4 sm:py-5 text-base sm:text-lg glass-strong rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1552F0]/50 transition-all text-black placeholder-black/50"
+                className="w-full pl-12 sm:pl-14 pr-4 sm:pr-6 py-4 sm:py-5 text-base sm:text-lg glass-strong rounded-2xl border-2 border-black/20 focus:outline-none focus:border-[#1552F0] focus:ring-4 focus:ring-[#1552F0]/20 transition-all text-black placeholder-black/50 font-medium shadow-lg"
                 disabled={searching}
                 aria-label="Search for prediction markets"
               />
@@ -198,7 +198,7 @@ function App() {
             <button
               type="submit"
               disabled={searching || !searchQuery.trim()}
-              className="w-full sm:w-auto px-8 py-4 sm:py-5 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-medium rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-8 py-4 sm:py-5 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-semibold rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg border-2 border-[#1552F0] hover:border-[#0f3ec4]"
               aria-label="Submit search"
             >
               {searching ? 'Searching...' : 'Search'}
