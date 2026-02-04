@@ -143,7 +143,7 @@ function App() {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-black mb-4 tracking-tight">
-            AI-Powered Polymarket Analysis & Prediction Market Intelligence
+            AI-Powered Polymarket Analysis
           </h1>
           <p className="text-lg text-black/70 max-w-2xl mx-auto font-semibold">
             Search prediction markets, get instant AI analysis, and make data-driven trading decisions on Polymarket with advanced market intelligence and probability assessments
