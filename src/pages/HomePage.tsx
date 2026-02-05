@@ -24,8 +24,8 @@ export function HomePage() {
               className="w-16 h-16 sm:w-20 sm:h-20"
             />
           </div>
-          <h1 className="text-6xl sm:text-7xl font-bold text-black mb-4 tracking-tight">
-            PolyAnswers
+          <h1 className="text-6xl sm:text-6xl font-bold text-black mb-4 tracking-tight">
+            PolyAnalyser
           </h1>
           <p className="text-lg text-black/60">
             Search prediction markets, get instant AI analysis, and make data-driven trading decisions on Polymarket with advanced market intelligence and probability assessments
