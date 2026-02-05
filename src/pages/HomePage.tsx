@@ -60,7 +60,7 @@ export function HomePage() {
         <div className="mt-16 text-center">
           <p className="text-sm text-black/50 mb-4">Popular searches</p>
           <div className="flex flex-wrap justify-center gap-2">
-            {['Trump 2024', 'Bitcoin', 'AI', 'Climate', 'Elections'].map((term) => (
+            {['Trump', 'Bitcoin', 'AI', 'Climate', 'Elections'].map((term) => (
               <button
                 key={term}
                 onClick={() => {
