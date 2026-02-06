@@ -19,7 +19,7 @@ export default function ConfirmationSentPage() {
         <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
           <div className="flex justify-center">
             <div className="relative">
-              <div className="absolute inset-0 bg-[#000] rounded-full blur-lg opacity-50 animate-pulse"></div>
+              <div className="absolute inset-0 bg-[#000] rounded-full opacity-50 animate-pulse"></div>
               <div className="relative bg-[#000] rounded-full p-4">
                 <Mail className="w-12 h-12 text-white" />
               </div>
