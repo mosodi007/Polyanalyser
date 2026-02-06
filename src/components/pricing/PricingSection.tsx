@@ -147,7 +147,7 @@ export function PricingSection() {
                     : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-2 border-gray-200'
                 }`}
               >
-                {tier === 'free' ? 'Current Plan' : user ? 'Downgrade' : 'Get Started'}
+                {tier === 'free' ? 'Current Plan' : user ? 'Downgrade' : 'Upgrade'}
               </button>
             </div>
 
