@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { CookieConsent } from './components/CookieConsent';
@@ -8,10 +8,15 @@ import { Signup } from './components/Signup';
 import { HomePage } from './pages/HomePage';
 import { SearchResultsPage } from './pages/SearchResultsPage';
 import { HistoryPage } from './pages/HistoryPage';
+import { LoginPage } from './pages/LoginPage';
+import { SignupPage } from './pages/SignupPage';
+import { PricingPage } from './pages/PricingPage';
+import { SuccessPage } from './pages/SuccessPage';
+import { AccountPage } from './pages/AccountPage';
 import { supabase } from './lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
-function App() {
+function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
@@ -69,7 +74,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <>
       <Header
         user={user}
         onLoginClick={() => setShowLogin(true)}
@@ -115,7 +120,25 @@ function App() {
 
       <Footer />
       <CookieConsent />
-    </div>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <div className="min-h-screen flex flex-col bg-white">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/success" element={<SuccessPage />} />
+          <Route path="/account" element={<AccountPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
