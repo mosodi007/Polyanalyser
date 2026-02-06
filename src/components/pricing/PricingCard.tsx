@@ -32,7 +32,7 @@ export function PricingCard({ product, onSelect, loading = false, popular = fals
         </div>
       ) : popular && (
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-          <span className="bg-[#000] text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-md flex items-center gap-1.5">
+          <span className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-md flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" />
             Most Popular
           </span>
@@ -66,7 +66,7 @@ export function PricingCard({ product, onSelect, loading = false, popular = fals
           disabled={loading || isCurrentTier}
           className={`mt-8 w-full py-3.5 px-6 rounded-lg font-semibold transition-all ${
             isCurrentTier
-              ? 'bg-green-500 text-white cursor-default'
+              ? 'bg-[#000] text-white cursor-default'
               : popular
               ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 shadow-md hover:shadow-lg disabled:from-blue-400 disabled:to-cyan-400'
               : 'bg-gray-900 text-white hover:bg-gray-800 shadow-sm hover:shadow-md disabled:bg-gray-400'
