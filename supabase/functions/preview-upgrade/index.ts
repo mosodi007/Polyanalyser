@@ -95,10 +95,17 @@ Deno.serve(async (req: Request) => {
           price: newPriceId,
         },
       ],
-      subscription_proration_behavior: "create_prorations",
+      subscription_proration_behavior: "always_invoice",
     });
 
-    const proratedAmount = upcomingInvoice.amount_due;
+    const immediateProrationLines = upcomingInvoice.lines.data.filter(
+      line => line.proration === true
+    );
+
+    const proratedAmount = immediateProrationLines.reduce(
+      (sum, line) => sum + line.amount,
+      0
+    );
 
     return new Response(
       JSON.stringify({
