@@ -1,17 +1,78 @@
 import { Mail, CheckCircle } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 
 export default function ConfirmationSentPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const email = location.state?.email;
+  const [resending, setResending] = useState(false);
+  const [resendMessage, setResendMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
 
   useEffect(() => {
     if (!email) {
       navigate('/signup');
     }
   }, [email, navigate]);
+
+  const handleResend = async () => {
+    setResending(true);
+    setResendMessage(null);
+
+    try {
+      // Generate a new token
+      const token = crypto.randomUUID();
+
+      // Update the token in the database
+      const { data: updateData, error: updateError } = await supabase
+        .from('email_verification_tokens')
+        .update({
+          token,
+          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours from now
+        })
+        .eq('email', email)
+        .is('verified_at', null) // Only update unverified tokens
+        .select();
+
+      if (updateError) {
+        console.error('Error updating token:', updateError);
+        setResendMessage({ type: 'error', text: 'Failed to generate new verification link. Please try signing up again.' });
+        return;
+      }
+
+      if (!updateData || updateData.length === 0) {
+        setResendMessage({ type: 'error', text: 'Your email may already be verified. Please try logging in.' });
+        return;
+      }
+
+      // Send the email
+      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-confirmation-email`;
+      const headers = {
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+      };
+
+      const emailResponse = await fetch(apiUrl, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ email, token }),
+      });
+
+      if (!emailResponse.ok) {
+        console.error('Failed to send confirmation email');
+        setResendMessage({ type: 'error', text: 'Failed to send confirmation email. Please try again.' });
+        return;
+      }
+
+      setResendMessage({ type: 'success', text: 'Email sent! Check your inbox.' });
+    } catch (error) {
+      console.error('Resend error:', error);
+      setResendMessage({ type: 'error', text: 'An unexpected error occurred. Please try again.' });
+    } finally {
+      setResending(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
@@ -58,15 +119,27 @@ export default function ConfirmationSentPage() {
             </div>
           </div>
 
-          <div className="space-y-3 pt-2">
+          {resendMessage && (
+            <div
+              className={`rounded-lg p-4 ${
+                resendMessage.type === 'error'
+                  ? 'bg-red-50 text-red-700 border border-red-200'
+                  : 'bg-green-50 text-green-700 border border-green-200'
+              }`}
+            >
+              {resendMessage.text}
+            </div>
+          )}
 
+          <div className="space-y-3 pt-2">
             <p className="text-center text-sm text-gray-500">
               Didn't receive the email?{' '}
               <button
-                onClick={() => navigate('/signup')}
-                className="text-[#1552F0] hover:text-[#0d3cb8] font-semibold underline"
+                onClick={handleResend}
+                disabled={resending}
+                className="text-[#1552F0] hover:text-[#0d3cb8] font-semibold underline disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Try signing up again
+                {resending ? 'Resending...' : 'Resend'}
               </button>
             </p>
           </div>
