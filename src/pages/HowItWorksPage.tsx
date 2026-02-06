@@ -355,7 +355,7 @@ export function HowItWorksPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={() => navigate('/signup')}
+              onClick={() => navigate('/')}
               className="px-8 py-4 bg-white hover:bg-gray-100 text-black font-medium rounded-lg transition-all"
             >
               Get Started Free
