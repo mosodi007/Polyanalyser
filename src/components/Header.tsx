@@ -130,7 +130,7 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
                     <div className="p-1">
                       <button
                         onClick={handlePricingClick}
-                        className="w-full flex gap-3 px-1 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium"
+                        className="w-full flex gap-2 px-2 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium"
                       >
                         <CreditCard className="w-4 h-4" />
                         Pricing & Subscription
