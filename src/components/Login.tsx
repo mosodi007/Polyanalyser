@@ -85,14 +85,14 @@ export function Login({ onClose, onSwitchToSignup }: LoginProps) {
             Continue with Google
           </button> */}
 
-          <div className="relative mb-6">
+          {/* <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-black/10"></div>
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-4 bg-white text-black/50">Or log in with email</span>
             </div>
-          </div>
+          </div> */}
 
           {error && (
             <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-700 text-sm">
