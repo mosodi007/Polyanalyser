@@ -16,10 +16,10 @@ export function UsageIndicator() {
     : Math.round((usage.usedToday / usage.dailyLimit) * 100);
 
   const getProgressColor = () => {
-    if (usage.isUnlimited) return 'bg-gradient-to-r from-purple-500 to-indigo-500';
+    if (usage.isUnlimited) return 'bg-[#1552F0]';
     if (percentage >= 100) return 'bg-red-500';
     if (percentage >= 80) return 'bg-orange-500';
-    return 'bg-gradient-to-r from-blue-500 to-cyan-500';
+    return 'bg-[#1552F0]';
   };
 
   const getTierIcon = () => {
@@ -36,9 +36,9 @@ export function UsageIndicator() {
   const getTierBadgeColor = () => {
     switch (tier) {
       case 'pro':
-        return 'bg-gradient-to-r from-purple-500 to-indigo-500';
+        return 'bg-[#000]';
       case 'lite':
-        return 'bg-gradient-to-r from-blue-500 to-cyan-500';
+        return 'bg-[#1552F0]';
       default:
         return 'bg-gray-600';
     }
@@ -69,11 +69,11 @@ export function UsageIndicator() {
           <span className="font-semibold text-gray-900">
             {usage.isUnlimited ? (
               <>
-                <span className="text-purple-600">{usage.usedToday}</span> today
+                <span className="text-[#1552F0]">{usage.usedToday}</span> today
               </>
             ) : (
               <>
-                <span className={usage.remainingToday === 0 ? 'text-red-600' : 'text-blue-600'}>
+                <span className={usage.remainingToday === 0 ? 'text-red-600' : 'text-[#1552F0]'}>
                   {usage.usedToday}
                 </span>
                 <span className="text-gray-400"> / {usage.dailyLimit}</span>
@@ -102,7 +102,7 @@ export function UsageIndicator() {
         )}
 
         {usage.isUnlimited && (
-          <div className="text-xs text-center text-purple-600 font-medium">
+          <div className="text-xs text-center text-[#1552F0] font-medium">
             Unlimited analyses
           </div>
         )}
@@ -112,7 +112,7 @@ export function UsageIndicator() {
         <div className="mt-3 pt-3 border-t border-gray-200">
           <Link
             to="/pricing"
-            className="block w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-center py-2 rounded-lg text-sm font-semibold hover:from-blue-700 hover:to-cyan-700 transition-all"
+            className="block w-full bg-[#1552F0] text-white text-center py-2 rounded-lg text-sm font-semibold hover:bg-[#0d3cb8] transition-all"
           >
             Upgrade for More Analyses
           </Link>

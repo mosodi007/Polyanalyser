@@ -16,7 +16,7 @@ export function AccountPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900">Please sign in</h2>
-          <Link to="/login" className="mt-4 text-indigo-600 hover:text-indigo-500">
+          <Link to="/login" className="mt-4 text-[#1552F0] hover:text-[#0d3cb8]">
             Go to login
           </Link>
         </div>
@@ -37,7 +37,7 @@ export function AccountPage() {
         <div className="mb-8">
           <Link
             to="/"
-            className="inline-flex items-center text-indigo-600 hover:text-indigo-500"
+            className="inline-flex items-center text-[#1552F0] hover:text-[#0d3cb8]"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Dashboard
@@ -90,7 +90,7 @@ export function AccountPage() {
               <div className="mt-6">
                 <Link
                   to="/pricing"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#1552F0] hover:bg-[#0d3cb8] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1552F0]"
                 >
                   View All Plans
                 </Link>
@@ -140,7 +140,7 @@ export function AccountPage() {
                               ? 'bg-red-500'
                               : usagePercentage >= 80
                               ? 'bg-orange-500'
-                              : 'bg-gradient-to-r from-blue-500 to-cyan-500'
+                              : 'bg-[#1552F0]'
                           }`}
                           style={{ width: `${Math.min(usagePercentage, 100)}%` }}
                         />
@@ -152,12 +152,12 @@ export function AccountPage() {
                   )}
 
                   {usage?.isUnlimited && (
-                    <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-4 text-center">
-                      <TrendingUp className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-                      <p className="text-sm font-medium text-purple-900">
+                    <div className="bg-blue-50 rounded-lg p-4 text-center border-l-4 border-[#1552F0]">
+                      <TrendingUp className="h-8 w-8 text-[#1552F0] mx-auto mb-2" />
+                      <p className="text-sm font-medium text-gray-900">
                         {usage.usedToday} analyses today
                       </p>
-                      <p className="text-xs text-purple-700 mt-1">
+                      <p className="text-xs text-gray-600 mt-1">
                         Unlimited analyses available
                       </p>
                     </div>

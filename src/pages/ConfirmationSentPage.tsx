@@ -35,14 +35,14 @@ export default function ConfirmationSentPage() {
             </p>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 space-y-4">
+          <div className="bg-blue-50 rounded-xl p-6 space-y-4 border-l-4 border-[#1552F0]">
             <div className="flex items-start space-x-3">
               <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-gray-700 font-medium">
                   We've sent a confirmation email to:
                 </p>
-                <p className="text-blue-600 font-semibold mt-1 break-all">
+                <p className="text-[#1552F0] font-semibold mt-1 break-all">
                   {email}
                 </p>
               </div>
@@ -64,7 +64,7 @@ export default function ConfirmationSentPage() {
               Didn't receive the email?{' '}
               <button
                 onClick={() => navigate('/signup')}
-                className="text-blue-600 hover:text-blue-700 font-semibold underline"
+                className="text-[#1552F0] hover:text-[#0d3cb8] font-semibold underline"
               >
                 Try signing up again
               </button>
@@ -75,7 +75,7 @@ export default function ConfirmationSentPage() {
         <div className="mt-6 text-center">
           <p className="text-gray-600 text-sm">
             Need help?{' '}
-            <a href="mailto:support@polyanalyser.com" className="text-blue-600 hover:text-blue-700 font-semibold">
+            <a href="mailto:support@polyanalyser.com" className="text-[#1552F0] hover:text-[#0d3cb8] font-semibold">
               Contact Support
             </a>
           </p>

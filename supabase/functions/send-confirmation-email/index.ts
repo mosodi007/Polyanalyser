@@ -50,38 +50,46 @@ Deno.serve(async (req: Request) => {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Confirm Your Email</title>
         </head>
-        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">Welcome to PolyAnalyser!</h1>
-          </div>
-
-          <div style="background: #f9fafb; padding: 40px 30px; border-radius: 0 0 10px 10px;">
-            <h2 style="color: #1f2937; margin-top: 0;">Confirm Your Email Address</h2>
-
-            <p style="color: #4b5563; font-size: 16px; line-height: 1.8;">
-              Thank you for signing up! We're excited to have you on board. To complete your registration and start analyzing Polymarket data, please confirm your email address.
-            </p>
-
-            <div style="text-align: center; margin: 35px 0;">
-              <a href="${verificationUrl}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 40px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                Confirm Your Email
-              </a>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f3f4f6;">
+          <div style="background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+            <div style="background: #1552F0; padding: 40px 20px; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700;">Welcome to PolyAnalyser!</h1>
             </div>
 
-            <p style="color: #6b7280; font-size: 14px; line-height: 1.6;">
-              Or copy and paste this link into your browser:<br>
-              <a href="${verificationUrl}" style="color: #667eea; word-break: break-all;">${verificationUrl}</a>
-            </p>
+            <div style="padding: 40px 30px;">
+              <h2 style="color: #111827; margin-top: 0; font-size: 22px; font-weight: 600;">Confirm Your Email Address</h2>
 
-            <div style="margin-top: 35px; padding-top: 25px; border-top: 1px solid #e5e7eb;">
-              <p style="color: #9ca3af; font-size: 13px; line-height: 1.6; margin: 0;">
-                If you didn't create an account with PolyAnalyser, you can safely ignore this email.
+              <p style="color: #4b5563; font-size: 16px; line-height: 1.8; margin: 20px 0;">
+                Thank you for signing up! We're excited to have you on board. To complete your registration and start analyzing Polymarket data, please confirm your email address.
               </p>
-            </div>
-          </div>
 
-          <div style="text-align: center; padding: 20px; color: #9ca3af; font-size: 12px;">
-            <p>© 2026 PolyAnalyser. All rights reserved.</p>
+              <div style="text-align: center; margin: 35px 0;">
+                <a href="${verificationUrl}" style="display: inline-block; background: #1552F0; color: white; padding: 16px 48px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(21, 82, 240, 0.3);">
+                  Confirm Your Email
+                </a>
+              </div>
+
+              <div style="background: #f9fafb; border-left: 4px solid #1552F0; padding: 16px 20px; margin: 30px 0; border-radius: 4px;">
+                <p style="color: #374151; font-size: 14px; line-height: 1.6; margin: 0;">
+                  <strong style="color: #111827;">Quick Start:</strong> Once verified, you'll have immediate access to AI-powered market analysis and insights.
+                </p>
+              </div>
+
+              <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 30px 0;">
+                Or copy and paste this link into your browser:<br>
+                <a href="${verificationUrl}" style="color: #1552F0; word-break: break-all; text-decoration: none;">${verificationUrl}</a>
+              </p>
+
+              <div style="margin-top: 35px; padding-top: 25px; border-top: 1px solid #e5e7eb;">
+                <p style="color: #9ca3af; font-size: 13px; line-height: 1.6; margin: 0;">
+                  If you didn't create an account with PolyAnalyser, you can safely ignore this email.
+                </p>
+              </div>
+            </div>
+
+            <div style="background: #f9fafb; text-align: center; padding: 20px; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb;">
+              <p style="margin: 0;">© 2026 PolyAnalyser. All rights reserved.</p>
+            </div>
           </div>
         </body>
       </html>

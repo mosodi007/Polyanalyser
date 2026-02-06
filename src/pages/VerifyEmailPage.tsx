@@ -84,8 +84,8 @@ export default function VerifyEmailPage() {
             <div className="relative">
               {verificationStatus === 'pending' && (
                 <>
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full blur-lg opacity-50"></div>
-                  <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 rounded-full p-4">
+                  <div className="absolute inset-0 bg-[#1552F0] rounded-full blur-lg opacity-40"></div>
+                  <div className="relative bg-[#000] rounded-full p-4">
                     <ShieldCheck className="w-12 h-12 text-white" />
                   </div>
                 </>
@@ -137,9 +137,9 @@ export default function VerifyEmailPage() {
           </div>
 
           {verificationStatus === 'pending' && (
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6">
+            <div className="bg-blue-50 rounded-xl p-6 border-l-4 border-[#1552F0]">
               <div className="space-y-4">
-                <p className="text-gray-700 text-sm leading-relaxed">
+                <p className="text-gray-700 text-sm leading-relaxed font-medium">
                   By confirming your email, you'll be able to:
                 </p>
                 <ul className="space-y-2 text-sm text-gray-600">
@@ -174,7 +174,7 @@ export default function VerifyEmailPage() {
               <button
                 onClick={handleVerifyEmail}
                 disabled={isVerifying || !token}
-                className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                className="w-full px-6 py-3 bg-[#1552F0] text-white rounded-lg font-semibold hover:bg-[#0d3cb8] transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
                 {isVerifying ? (
                   <>
@@ -191,7 +191,7 @@ export default function VerifyEmailPage() {
               <div className="space-y-3">
                 <button
                   onClick={() => navigate('/signup')}
-                  className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                  className="w-full px-6 py-3 bg-[#1552F0] text-white rounded-lg font-semibold hover:bg-[#0d3cb8] transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Sign Up Again
                 </button>
@@ -209,7 +209,7 @@ export default function VerifyEmailPage() {
         <div className="mt-6 text-center">
           <p className="text-gray-600 text-sm">
             Need help?{' '}
-            <a href="mailto:support@polyanalyser.com" className="text-blue-600 hover:text-blue-700 font-semibold">
+            <a href="mailto:support@polyanalyser.com" className="text-[#1552F0] hover:text-[#0d3cb8] font-semibold">
               Contact Support
             </a>
           </p>
