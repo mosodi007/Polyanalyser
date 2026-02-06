@@ -40,7 +40,7 @@ Deno.serve(async (req: Request) => {
       throw new Error("RESEND_API_KEY not configured");
     }
 
-    const verificationUrl = `${Deno.env.get("SITE_URL") || "http://localhost:5173"}/verify-email?token=${token}`;
+    const verificationUrl = `${Deno.env.get("SITE_URL") || "https://polyanalyser.com"}/verify-email?token=${token}`;
 
     const emailHtml = `
       <!DOCTYPE html>
