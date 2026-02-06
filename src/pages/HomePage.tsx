@@ -136,44 +136,7 @@ export function HomePage() {
         </div>
       </div>
 
-      {/* <div className="w-full max-w-4xl mx-auto px-4 mt-24 mb-16">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-black mb-3">
-            Frequently Asked Questions About Polymarket Analysis
-          </h2>
-          <p className="text-black/60">
-            Everything you need to know about using PolyAnalyser for Polymarket prediction markets
-          </p>
-        </div> */}
-
-        {/* <div className="space-y-4">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-lg border border-black/10 overflow-hidden transition-all hover:border-black/20"
-            >
-              <button
-                onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
-                className="w-full px-6 py-4 text-left flex items-center justify-between gap-4 hover:bg-black/5 transition-colors"
-              >
-                <h3 className="text-base font-medium text-black">{faq.question}</h3>
-                <ChevronDown
-                  className={`w-5 h-5 text-black/60 transition-transform flex-shrink-0 ${
-                    expandedFaq === index ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-              {expandedFaq === index && (
-                <div className="px-6 pb-4">
-                  <p className="text-black/70 leading-relaxed">{faq.answer}</p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div> */}
-
-        
-      </div>
+      
     </div>
   );
 }
