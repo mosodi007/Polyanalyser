@@ -255,7 +255,7 @@ export function PricingSection() {
           {/* Free Tier */}
           <div className={`relative rounded-2xl border-2 bg-white p-8 shadow-sm transition-all ${
             tier === 'free'
-              ? 'border-green-500 ring-4 ring-green-100'
+              ? 'border-slate-500'
               : 'border-gray-200 hover:shadow-md'
           }`}>
             {tier === 'free' && (
