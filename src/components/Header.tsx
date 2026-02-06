@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { LogOut, ChevronDown, History } from 'lucide-react';
+import { LogOut, ChevronDown, History, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useSubscription } from '../hooks/useSubscription';
@@ -54,6 +54,11 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    setShowUserMenu(false);
+  };
+
+  const handlePricingClick = () => {
+    navigate('/pricing');
     setShowUserMenu(false);
   };
 
@@ -118,6 +123,13 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
                 {showUserMenu && (
                   <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-black/10 overflow-hidden z-50">
                     <div className="p-1">
+                      <button
+                        onClick={handlePricingClick}
+                        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium"
+                      >
+                        <CreditCard className="w-4 h-4" />
+                        Pricing & Subscription
+                      </button>
                       <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-3 py-2 hover:bg-black/5 rounded-md transition-colors text-red-600 text-sm font-medium"
