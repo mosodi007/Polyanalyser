@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { LogOut, ChevronDown, History } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { useSubscription } from '../hooks/useSubscription';
 import type { User } from '@supabase/supabase-js';
 
 interface HeaderProps {
@@ -16,6 +17,7 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
   const [fullName, setFullName] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { tier } = useSubscription();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -65,6 +67,17 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
         .slice(0, 2)
     : user?.email?.[0].toUpperCase() || 'U';
 
+  const getTierBadgeStyle = () => {
+    switch (tier) {
+      case 'pro':
+        return 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white';
+      case 'lite':
+        return 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white';
+      default:
+        return 'bg-gray-600 text-white';
+    }
+  };
+
   return (
     <header className={minimal ? "bg-white border-b border-black/5" : "bg-white/80 backdrop-blur-sm border-b border-black/5"}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
@@ -91,9 +104,14 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
                   <div className="w-7 h-7 bg-[#1552F0] rounded-full flex items-center justify-center text-white text-sm font-semibold">
                     {initials}
                   </div>
-                  <span className="hidden sm:inline text-black text-sm font-medium max-w-[150px] truncate">
-                    {displayName}
-                  </span>
+                  <div className="hidden sm:flex flex-col items-start">
+                    <span className="text-black text-sm font-medium max-w-[150px] truncate">
+                      {displayName}
+                    </span>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${getTierBadgeStyle()}`}>
+                      {tier.toUpperCase()}
+                    </span>
+                  </div>
                   <ChevronDown className="w-4 h-4 text-black/50" />
                 </button>
 
