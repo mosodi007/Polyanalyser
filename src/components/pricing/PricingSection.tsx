@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PricingCard } from './PricingCard';
 import { stripeProducts, StripeProduct, freeTierFeatures } from '../../stripe-config';
 import { useAuth } from '../../hooks/useAuth';
+import { useSubscription } from '../../hooks/useSubscription';
 import { createCheckoutSession } from '../../lib/stripe';
 import { Check } from 'lucide-react';
 
@@ -13,6 +14,7 @@ export function PricingSection() {
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
   const [billingInterval, setBillingInterval] = useState<BillingInterval>('year');
   const { user } = useAuth();
+  const { tier } = useSubscription();
   const navigate = useNavigate();
 
   const handleSelectPlan = async (product: StripeProduct) => {
@@ -113,7 +115,18 @@ export function PricingSection() {
 
         <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3 max-w-6xl mx-auto">
           {/* Free Tier */}
-          <div className="relative rounded-2xl border-2 border-gray-200 bg-white p-8 shadow-sm hover:shadow-md transition-shadow">
+          <div className={`relative rounded-2xl border-2 bg-white p-8 shadow-sm transition-all ${
+            tier === 'free'
+              ? 'border-green-500 ring-4 ring-green-100'
+              : 'border-gray-200 hover:shadow-md'
+          }`}>
+            {tier === 'free' && (
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="bg-green-500 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-md">
+                  Current Plan
+                </span>
+              </div>
+            )}
             <div className="text-center">
               <h3 className="text-2xl font-bold text-gray-900">Free</h3>
               <p className="mt-2 text-sm text-gray-600">Get started with AI-powered analysis</p>
@@ -127,9 +140,14 @@ export function PricingSection() {
 
               <button
                 onClick={() => navigate(user ? '/' : '/signup')}
-                className="mt-8 w-full py-3 px-6 rounded-lg font-medium transition-all bg-gray-100 text-gray-900 hover:bg-gray-200 border-2 border-gray-200"
+                disabled={tier === 'free'}
+                className={`mt-8 w-full py-3 px-6 rounded-lg font-medium transition-all ${
+                  tier === 'free'
+                    ? 'bg-green-500 text-white cursor-default'
+                    : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-2 border-gray-200'
+                }`}
               >
-                {user ? 'Current Plan' : 'Get Started'}
+                {tier === 'free' ? 'Current Plan' : user ? 'Downgrade' : 'Get Started'}
               </button>
             </div>
 
@@ -151,6 +169,7 @@ export function PricingSection() {
               product={selectedLite}
               onSelect={handleSelectPlan}
               loading={loading === selectedLite.priceId}
+              isCurrentTier={tier === 'lite'}
             />
           )}
 
@@ -161,6 +180,7 @@ export function PricingSection() {
               onSelect={handleSelectPlan}
               loading={loading === selectedPro.priceId}
               popular
+              isCurrentTier={tier === 'pro'}
             />
           )}
         </div>

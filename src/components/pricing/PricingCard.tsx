@@ -7,21 +7,30 @@ interface PricingCardProps {
   onSelect: (product: StripeProduct) => void;
   loading?: boolean;
   popular?: boolean;
+  isCurrentTier?: boolean;
 }
 
-export function PricingCard({ product, onSelect, loading = false, popular = false }: PricingCardProps) {
+export function PricingCard({ product, onSelect, loading = false, popular = false, isCurrentTier = false }: PricingCardProps) {
   const isAnnual = product.interval === 'year';
   const monthlyEquivalent = isAnnual ? product.price / 12 : product.price;
 
   const tierName = product.name.includes('Lite') ? 'Lite' : 'Pro';
 
   return (
-    <div className={`relative rounded-2xl border-2 p-8 transition-all hover:shadow-lg ${
-      popular
-        ? 'border-blue-600 bg-white shadow-xl scale-105'
-        : 'border-gray-200 bg-white shadow-sm'
+    <div className={`relative rounded-2xl border-2 p-8 transition-all ${
+      isCurrentTier
+        ? 'border-green-500 bg-white shadow-xl ring-4 ring-green-100'
+        : popular
+        ? 'border-blue-600 bg-white shadow-xl scale-105 hover:shadow-2xl'
+        : 'border-gray-200 bg-white shadow-sm hover:shadow-lg'
     }`}>
-      {popular && (
+      {isCurrentTier ? (
+        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+          <span className="bg-green-500 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-md">
+            Current Plan
+          </span>
+        </div>
+      ) : popular && (
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
           <span className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-md flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" />
@@ -54,14 +63,16 @@ export function PricingCard({ product, onSelect, loading = false, popular = fals
 
         <button
           onClick={() => onSelect(product)}
-          disabled={loading}
+          disabled={loading || isCurrentTier}
           className={`mt-8 w-full py-3.5 px-6 rounded-lg font-semibold transition-all ${
-            popular
+            isCurrentTier
+              ? 'bg-green-500 text-white cursor-default'
+              : popular
               ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 shadow-md hover:shadow-lg disabled:from-blue-400 disabled:to-cyan-400'
               : 'bg-gray-900 text-white hover:bg-gray-800 shadow-sm hover:shadow-md disabled:bg-gray-400'
           } disabled:cursor-not-allowed`}
         >
-          {loading ? 'Processing...' : 'Get Started'}
+          {loading ? 'Processing...' : isCurrentTier ? 'Current Plan' : 'Get Started'}
         </button>
       </div>
 

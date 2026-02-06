@@ -75,7 +75,7 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
   const getTierBadgeStyle = () => {
     switch (tier) {
       case 'pro':
-        return 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white';
+        return 'bg-gradient-to-r from-amber-500 to-orange-500 text-white';
       case 'lite':
         return 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white';
       default:
