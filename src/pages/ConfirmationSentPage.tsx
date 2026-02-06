@@ -59,12 +59,6 @@ export default function ConfirmationSentPage() {
           </div>
 
           <div className="space-y-3 pt-2">
-            <button
-              onClick={() => navigate('/login')}
-              className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg"
-            >
-              Go to Login
-            </button>
 
             <p className="text-center text-sm text-gray-500">
               Didn't receive the email?{' '}
