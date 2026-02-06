@@ -5,6 +5,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { MarketDetail } from '../components/MarketDetail';
 import { DataSyncService } from '../services/data-sync.service';
 import { PolymarketService } from '../services/polymarket.service';
+import type { User } from '@supabase/supabase-js';
 
 interface Market {
   id: string;
@@ -32,7 +33,12 @@ interface Analysis {
   risk_factors?: string[];
 }
 
-export function SearchResultsPage() {
+interface SearchResultsPageProps {
+  user?: User | null;
+  onLoginClick?: () => void;
+}
+
+export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const query = searchParams.get('q') || '';
@@ -96,6 +102,11 @@ export function SearchResultsPage() {
   };
 
   const handleAnalyze = async (market: Market) => {
+    if (!user) {
+      onLoginClick?.();
+      return;
+    }
+
     setAnalyzingMarketId(market.id);
     setError(null);
 

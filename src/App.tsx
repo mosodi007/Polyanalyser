@@ -43,7 +43,15 @@ function App() {
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/search" element={<SearchResultsPage />} />
+          <Route
+            path="/search"
+            element={
+              <SearchResultsPage
+                user={user}
+                onLoginClick={() => setShowLogin(true)}
+              />
+            }
+          />
         </Routes>
       </main>
 
