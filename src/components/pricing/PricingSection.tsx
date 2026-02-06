@@ -6,9 +6,12 @@ import { useAuth } from '../../hooks/useAuth';
 import { createCheckoutSession } from '../../lib/stripe';
 import { Check } from 'lucide-react';
 
+type BillingInterval = 'month' | 'year';
+
 export function PricingSection() {
   const [loading, setLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
+  const [billingInterval, setBillingInterval] = useState<BillingInterval>('month');
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -34,9 +37,9 @@ export function PricingSection() {
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      setMessage({ 
-        type: 'error', 
-        text: error instanceof Error ? error.message : 'Failed to start checkout process' 
+      setMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : 'Failed to start checkout process'
       });
     } finally {
       setLoading(null);
@@ -47,20 +50,59 @@ export function PricingSection() {
   const liteProducts = stripeProducts.filter(p => p.name.includes('Lite'));
   const proProducts = stripeProducts.filter(p => p.name.includes('Pro'));
 
+  // Get products for selected interval
+  const selectedLite = liteProducts.find(p => p.interval === billingInterval);
+  const selectedPro = proProducts.find(p => p.interval === billingInterval);
+
   return (
-    <div className="py-16 bg-gray-50">
+    <div className="py-16 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">
             Choose Your Plan
           </h2>
-          <p className="mt-4 text-xl text-gray-600">
+          <p className="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
             Get AI-powered market analysis to make smarter trading decisions
           </p>
         </div>
 
+        {/* Billing Toggle */}
+        <div className="mt-12 flex justify-center">
+          <div className="relative bg-gray-100 rounded-full p-1 inline-flex items-center gap-1">
+            <button
+              onClick={() => setBillingInterval('month')}
+              className={`relative px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                billingInterval === 'month'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingInterval('year')}
+              className={`relative px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                billingInterval === 'year'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Annually
+            </button>
+          </div>
+        </div>
+
+        {/* Savings Badge */}
+        {billingInterval === 'year' && (
+          <div className="mt-4 text-center">
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+              Save up to 20% with annual billing
+            </span>
+          </div>
+        )}
+
         {message && (
-          <div className={`mt-8 max-w-md mx-auto rounded-md p-4 ${
+          <div className={`mt-8 max-w-md mx-auto rounded-lg p-4 ${
             message.type === 'error'
               ? 'bg-red-50 text-red-700 border border-red-200'
               : 'bg-green-50 text-green-700 border border-green-200'
@@ -69,31 +111,30 @@ export function PricingSection() {
           </div>
         )}
 
-        <div className="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3 max-w-6xl mx-auto">
           {/* Free Tier */}
-          <div className="relative rounded-2xl border-2 border-gray-200 bg-white p-8">
+          <div className="relative rounded-2xl border-2 border-gray-200 bg-white p-8 shadow-sm hover:shadow-md transition-shadow">
             <div className="text-center">
               <h3 className="text-2xl font-bold text-gray-900">Free</h3>
-              <p className="mt-2 text-gray-600">Get started with AI-powered analysis</p>
+              <p className="mt-2 text-sm text-gray-600">Get started with AI-powered analysis</p>
 
-              <div className="mt-6">
+              <div className="mt-8">
                 <div className="flex items-baseline justify-center">
-                  <span className="text-4xl font-bold text-gray-900">$0</span>
-                  <span className="ml-1 text-xl text-gray-500">/month</span>
+                  <span className="text-5xl font-bold text-gray-900">$0</span>
+                  <span className="ml-2 text-lg text-gray-500">/month</span>
                 </div>
               </div>
 
               <button
                 onClick={() => navigate(user ? '/' : '/signup')}
-                className="mt-8 w-full py-3 px-6 rounded-lg font-medium transition-colors bg-gray-900 text-white hover:bg-gray-800"
+                className="mt-8 w-full py-3 px-6 rounded-lg font-medium transition-all bg-gray-100 text-gray-900 hover:bg-gray-200 border-2 border-gray-200"
               >
-                {user ? 'Get Started' : 'Sign Up Free'}
+                {user ? 'Current Plan' : 'Get Started'}
               </button>
             </div>
 
             <div className="mt-8">
-              <h4 className="text-sm font-medium text-gray-900 mb-4">What's included:</h4>
-              <ul className="space-y-3">
+              <ul className="space-y-4">
                 {freeTierFeatures.map((feature, index) => (
                   <li key={index} className="flex items-start">
                     <Check className="h-5 w-5 text-green-500 mt-0.5 mr-3 flex-shrink-0" />
@@ -104,41 +145,29 @@ export function PricingSection() {
             </div>
           </div>
 
-          {/* Lite Monthly */}
-          <PricingCard
-            product={liteProducts.find(p => p.interval === 'month')!}
-            onSelect={handleSelectPlan}
-            loading={loading === liteProducts.find(p => p.interval === 'month')?.priceId}
-          />
+          {/* Lite Plan */}
+          {selectedLite && (
+            <PricingCard
+              product={selectedLite}
+              onSelect={handleSelectPlan}
+              loading={loading === selectedLite.priceId}
+            />
+          )}
 
-          {/* Pro Monthly */}
-          <PricingCard
-            product={proProducts.find(p => p.interval === 'month')!}
-            onSelect={handleSelectPlan}
-            loading={loading === proProducts.find(p => p.interval === 'month')?.priceId}
-            popular
-          />
-        </div>
-
-        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2 max-w-2xl mx-auto">
-          {/* Lite Annual */}
-          <PricingCard
-            product={liteProducts.find(p => p.interval === 'year')!}
-            onSelect={handleSelectPlan}
-            loading={loading === liteProducts.find(p => p.interval === 'year')?.priceId}
-          />
-
-          {/* Pro Annual */}
-          <PricingCard
-            product={proProducts.find(p => p.interval === 'year')!}
-            onSelect={handleSelectPlan}
-            loading={loading === proProducts.find(p => p.interval === 'year')?.priceId}
-          />
+          {/* Pro Plan */}
+          {selectedPro && (
+            <PricingCard
+              product={selectedPro}
+              onSelect={handleSelectPlan}
+              loading={loading === selectedPro.priceId}
+              popular
+            />
+          )}
         </div>
 
         <div className="mt-12 text-center">
           <p className="text-gray-600">
-            All plans include a 7-day free trial. Cancel anytime.
+            All paid plans include a 7-day free trial. Cancel anytime.
           </p>
         </div>
       </div>
