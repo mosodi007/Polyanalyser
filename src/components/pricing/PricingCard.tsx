@@ -19,7 +19,7 @@ export function PricingCard({ product, onSelect, loading = false, popular = fals
   return (
     <div className={`relative rounded-2xl border-2 p-8 transition-all ${
       isCurrentTier
-        ? 'border-slate-400 bg-white shadow-xl ring-4 ring-green-100'
+        ? 'border-slate-400 bg-white'
         : popular
         ? 'border-blue-600 bg-white shadow-xl scale-105 hover:shadow-2xl'
         : 'border-gray-200 bg-white shadow-sm hover:shadow-lg'
