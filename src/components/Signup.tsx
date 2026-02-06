@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { X, Mail, Lock, Chrome, Eye, EyeOff, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 interface SignupProps {
@@ -8,6 +9,7 @@ interface SignupProps {
 }
 
 export function Signup({ onClose, onSwitchToLogin }: SignupProps) {
+  const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,7 +18,6 @@ export function Signup({ onClose, onSwitchToLogin }: SignupProps) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const handleEmailSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +44,12 @@ export function Signup({ onClose, onSwitchToLogin }: SignupProps) {
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/verify-email`,
+          data: {
+            full_name: fullName.trim(),
+          },
+        },
       });
 
       if (signUpError) throw signUpError;
@@ -55,12 +62,48 @@ export function Signup({ onClose, onSwitchToLogin }: SignupProps) {
             full_name: fullName.trim(),
           });
 
-        if (profileError) throw profileError;
+        if (profileError) {
+          console.error('Error creating profile:', profileError);
+        }
 
-        setSuccess(true);
-        setTimeout(() => {
-          onClose();
-        }, 2000);
+        const token = crypto.randomUUID();
+
+        const { error: tokenError } = await supabase
+          .from('email_verification_tokens')
+          .insert([
+            {
+              user_id: data.user.id,
+              token,
+              email,
+            },
+          ]);
+
+        if (tokenError) {
+          console.error('Error creating verification token:', tokenError);
+          setError('Failed to create verification token');
+          return;
+        }
+
+        const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-confirmation-email`;
+        const headers = {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        };
+
+        const emailResponse = await fetch(apiUrl, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ email, token }),
+        });
+
+        if (!emailResponse.ok) {
+          console.error('Failed to send confirmation email');
+          setError('Failed to send confirmation email');
+          return;
+        }
+
+        onClose();
+        navigate('/confirmation-sent', { state: { email } });
       }
     } catch (err: any) {
       setError(err.message || 'Failed to sign up. Please try again.');
@@ -108,18 +151,7 @@ export function Signup({ onClose, onSwitchToLogin }: SignupProps) {
             <p className="text-black/60">Create your account to get started</p>
           </div>
 
-          {success ? (
-            <div className="text-center py-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-500/20 rounded-full mb-4">
-                <svg className="w-8 h-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-black mb-2">Account Created!</h3>
-              <p className="text-black/60">Welcome to Polyanalyser</p>
-            </div>
-          ) : (
-            <>
+          <>
               <button
                 onClick={handleGoogleSignup}
                 disabled={loading}
@@ -273,7 +305,6 @@ export function Signup({ onClose, onSwitchToLogin }: SignupProps) {
                 </p>
               </div>
             </>
-          )}
         </div>
       </div>
     </div>
