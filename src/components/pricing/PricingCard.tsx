@@ -28,7 +28,7 @@ export function PricingCard({ product, onSelect, loading = false, popular = fals
     }`}>
       {isCurrentTier ? (
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-          <span className="bg-slate-500 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-md">
+          <span className="bg-slate-50 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-md">
             Current Plan
           </span>
         </div>
