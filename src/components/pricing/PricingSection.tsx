@@ -295,7 +295,7 @@ export function PricingSection() {
                   tier === 'free'
                     ? 'bg-slate-500 text-white cursor-default'
                     : isDowngrade('free') && user
-                    ? 'bg-slate-600 to-red-600 text-white hover:from-orange-700 hover:to-red-700 shadow-md hover:shadow-lg disabled:from-orange-400 disabled:to-red-400 disabled:cursor-not-allowed'
+                    ? 'bg-slate-800 to-red-600 text-white hover:from-orange-700 hover:to-red-700 shadow-md hover:shadow-lg disabled:from-orange-400 disabled:to-red-400 disabled:cursor-not-allowed'
                     : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-2 border-gray-200'
                 }`}
               >
