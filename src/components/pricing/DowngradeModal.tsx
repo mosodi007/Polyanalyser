@@ -63,7 +63,7 @@ export function DowngradeModal({
           </button>
 
           <div className="text-center mb-6">
-            <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-red-500 shadow-lg mb-4">
+            <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-slate-500 mb-4">
               <AlertTriangle className="h-9 w-9 text-white" />
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Confirm Downgrade</h2>
