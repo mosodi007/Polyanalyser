@@ -102,7 +102,7 @@ Deno.serve(async (req: Request) => {
         "Authorization": `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "PolyAnalyser <onboarding@resend.dev>",
+        from: "PolyAnalyser <verify@polyanalyser.com>",
         to: [email],
         subject: "Confirm Your Email - PolyAnalyser",
         html: emailHtml,
