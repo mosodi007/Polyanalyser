@@ -16,6 +16,9 @@ import { AccountPage } from './pages/AccountPage';
 import { StripeTestPage } from './pages/StripeTestPage';
 import ConfirmationSentPage from './pages/ConfirmationSentPage';
 import VerifyEmailPage from './pages/VerifyEmailPage';
+import { TermsPage } from './pages/TermsPage';
+import { PrivacyPage } from './pages/PrivacyPage';
+import { CookiePolicyPage } from './pages/CookiePolicyPage';
 import { supabase } from './lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
@@ -111,6 +114,9 @@ function App() {
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/stripe-test" element={<StripeTestPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/cookies" element={<CookiePolicyPage />} />
         </Routes>
       </main>
 

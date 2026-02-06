@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export function Footer() {
   return (
     <footer className="glass border-t border-black/10 mt-auto">
@@ -5,17 +7,17 @@ export function Footer() {
         <div className="text-center">
           <p className="text-sm text-black/60">
             By using Polyanalyser, you agree to our{' '}
-            <a href="/terms" className="text-[#1552F0] hover:underline font-medium">
+            <Link to="/terms" className="text-[#1552F0] hover:underline font-medium">
               Terms
-            </a>{' '}
+            </Link>{' '}
             and have read our{' '}
-            <a href="/privacy" className="text-[#1552F0] hover:underline font-medium">
+            <Link to="/privacy" className="text-[#1552F0] hover:underline font-medium">
               Privacy Policy
-            </a>
+            </Link>
             . See{' '}
-            <button className="text-[#1552F0] hover:underline font-medium">
+            <Link to="/cookies" className="text-[#1552F0] hover:underline font-medium">
               Cookie Preferences
-            </button>
+            </Link>
             .
           </p>
         </div>
