@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PricingCard } from './PricingCard';
 import { UpgradeModal } from './UpgradeModal';
+import { UpgradeSuccessModal } from './UpgradeSuccessModal';
 import { stripeProducts, StripeProduct, freeTierFeatures } from '../../stripe-config';
 import { useAuth } from '../../hooks/useAuth';
 import { useSubscription } from '../../hooks/useSubscription';
@@ -15,10 +16,12 @@ export function PricingSection() {
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
   const [billingInterval, setBillingInterval] = useState<BillingInterval>('year');
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [upgradeSuccessModalOpen, setUpgradeSuccessModalOpen] = useState(false);
   const [selectedPlanForUpgrade, setSelectedPlanForUpgrade] = useState<StripeProduct | null>(null);
+  const [upgradedPlan, setUpgradedPlan] = useState<{ name: string; tier: string } | null>(null);
   const [proratedAmount, setProratedAmount] = useState<number | undefined>(undefined);
   const { user } = useAuth();
-  const { tier } = useSubscription();
+  const { tier, refresh } = useSubscription();
   const navigate = useNavigate();
 
   const isUpgrade = (product: StripeProduct): boolean => {
@@ -104,15 +107,14 @@ export function PricingSection() {
       const result = await updateSubscription(selectedPlanForUpgrade.priceId);
 
       if (result.success) {
-        setMessage({
-          type: 'success',
-          text: 'Subscription upgraded successfully!'
-        });
         setUpgradeModalOpen(false);
+        setUpgradedPlan({
+          name: selectedPlanForUpgrade.name,
+          tier: selectedPlanForUpgrade.tier
+        });
+        setUpgradeSuccessModalOpen(true);
 
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+        await refresh();
       } else {
         throw new Error(result.error || 'Failed to upgrade subscription');
       }
@@ -287,6 +289,20 @@ export function PricingSection() {
           newPlan={selectedPlanForUpgrade}
           proratedAmount={proratedAmount}
           loading={loading === selectedPlanForUpgrade.priceId}
+        />
+      )}
+
+      {upgradedPlan && (
+        <UpgradeSuccessModal
+          isOpen={upgradeSuccessModalOpen}
+          onClose={() => {
+            setUpgradeSuccessModalOpen(false);
+            setUpgradedPlan(null);
+            setSelectedPlanForUpgrade(null);
+            setProratedAmount(undefined);
+          }}
+          planName={upgradedPlan.name}
+          planTier={upgradedPlan.tier}
         />
       )}
     </div>
