@@ -56,33 +56,39 @@ Deno.serve(async (req: Request) => {
       throw new Error("newPriceId is required");
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .from("user_profiles")
-      .select("stripe_customer_id, stripe_subscription_id")
+    const { data: customer, error: customerError } = await supabase
+      .from("stripe_customers")
+      .select("customer_id")
       .eq("user_id", user.id)
       .maybeSingle();
 
-    if (profileError || !profile) {
-      throw new Error("Profile not found");
+    if (customerError || !customer) {
+      throw new Error("Stripe customer not found");
     }
 
-    if (!profile.stripe_subscription_id) {
+    const { data: subscription, error: subscriptionError } = await supabase
+      .from("stripe_subscriptions")
+      .select("subscription_id")
+      .eq("customer_id", customer.customer_id)
+      .maybeSingle();
+
+    if (subscriptionError || !subscription || !subscription.subscription_id) {
       throw new Error("No active subscription found");
     }
 
-    const subscription = await stripe.subscriptions.retrieve(
-      profile.stripe_subscription_id
+    const stripeSubscription = await stripe.subscriptions.retrieve(
+      subscription.subscription_id
     );
 
-    if (subscription.status !== "active" && subscription.status !== "trialing") {
+    if (stripeSubscription.status !== "active" && stripeSubscription.status !== "trialing") {
       throw new Error("Subscription is not active");
     }
 
-    const currentItem = subscription.items.data[0];
+    const currentItem = stripeSubscription.items.data[0];
 
     const upcomingInvoice = await stripe.invoices.retrieveUpcoming({
-      customer: profile.stripe_customer_id,
-      subscription: profile.stripe_subscription_id,
+      customer: customer.customer_id,
+      subscription: subscription.subscription_id,
       subscription_items: [
         {
           id: currentItem.id,
