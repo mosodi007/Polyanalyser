@@ -28,7 +28,7 @@ export function HomePage() {
             PolyAnalyser
           </h1>
           <p className="text-lg text-black/60">
-            Search prediction markets, get instant AI analysis, and make data-driven trading decisions on Polymarket with advanced market intelligence and probability assessments
+            Search prediction markets, get instant accurate AI analysis, and make data-driven trading decisions on Polymarket with advanced market intelligence and probability assessments
           </p>
         </div>
 
