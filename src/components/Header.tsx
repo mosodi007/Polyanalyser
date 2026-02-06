@@ -96,8 +96,9 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
             {user && (
               <button
                 onClick={() => navigate('/history')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600"
+                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600"
               >
+                <History className="w-4 h-4" />
                 History
               </button>
             )}
