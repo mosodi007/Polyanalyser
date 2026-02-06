@@ -18,6 +18,8 @@ interface Market {
   close_time?: string;
   active?: boolean;
   closed?: boolean;
+  event_slug?: string;
+  slug?: string;
 }
 
 interface Analysis {
@@ -87,6 +89,8 @@ export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps
           close_time: m.endDate,
           active: m.active,
           closed: m.closed,
+          event_slug: (m as any).event_slug,
+          slug: m.slug,
         }));
         setSearchResults(formattedMarkets);
       }
@@ -119,6 +123,8 @@ export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps
         close_time: fullMarket.endDate,
         active: fullMarket.active,
         closed: fullMarket.closed,
+        event_slug: (fullMarket as any).event_slug,
+        slug: fullMarket.slug,
       };
 
       const { data: existingAnalysis } = await DataSyncService.getMarketAnalysis(id);

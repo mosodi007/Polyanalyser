@@ -10,6 +10,8 @@ interface MarketDetailProps {
     volume?: number;
     liquidity?: number;
     close_time?: string;
+    event_slug?: string;
+    slug?: string;
   };
   analysis?: {
     ai_probability: number;
@@ -40,7 +42,11 @@ export function MarketDetail({ market, analysis, onClose }: MarketDetailProps) {
     }
   };
 
-  const polymarketUrl = `https://polymarket.com`;
+  const polymarketUrl = market.event_slug
+    ? `https://polymarket.com/event/${market.event_slug}`
+    : market.slug
+    ? `https://polymarket.com/event/${market.slug}`
+    : `https://polymarket.com`;
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4">
