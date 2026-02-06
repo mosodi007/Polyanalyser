@@ -49,13 +49,19 @@ export function MarketDetail({ market, analysis, onClose }: MarketDetailProps) {
     : `https://polymarket.com`;
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4">
+    <div
+      className="fixed inset-0 bg-black/30 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="market-detail-title"
+    >
       <div className="glass-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 glass-white border-b border-black/10 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex items-center justify-between z-10 rounded-t-2xl sm:rounded-t-3xl">
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-black">Market Analysis</h2>
+          <h2 id="market-detail-title" className="text-lg sm:text-xl lg:text-2xl font-semibold text-black">Market Analysis</h2>
           <button
             onClick={onClose}
             className="p-1.5 sm:p-2 hover:bg-black/5 rounded-xl transition-colors"
+            aria-label="Close market analysis"
           >
             <X className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
           </button>
