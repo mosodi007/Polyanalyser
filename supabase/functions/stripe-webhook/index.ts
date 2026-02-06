@@ -171,10 +171,10 @@ async function handleInvoicePaymentFailed(event: Stripe.Event) {
 
 function getTierFromPriceId(priceId: string): string {
   const tierMapping: Record<string, string> = {
-    'price_1Sxl8xHJtj9hmvRftM9cClgJ': 'lite',
-    'price_1SxlCsHJtj9hmvRftE3jQIpY': 'lite',
-    'price_1Sxl9qHJtj9hmvRfepiVyPpW': 'pro',
-    'price_1SxlE7HJtj9hmvRfTdZBX7pU': 'pro',
+    'price_1SxqxqHJtj9hmvRfoeIrvHDC': 'lite',
+    'price_1SxqxiHJtj9hmvRfk91AktpL': 'lite',
+    'price_1SxqxmHJtj9hmvRfHHkPAIFd': 'pro',
+    'price_1SxqxeHJtj9hmvRfSoD4q1o3': 'pro',
   };
 
   return tierMapping[priceId] || 'free';

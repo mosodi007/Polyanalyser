@@ -22,8 +22,8 @@ export interface TierLimits {
 
 export const stripeProducts: StripeProduct[] = [
   {
-    id: 'prod_TvcNbhPpOpfG0E',
-    priceId: 'price_1Sxl8xHJtj9hmvRftM9cClgJ',
+    id: 'prod_TviOtzZqPpeIMc',
+    priceId: 'price_1SxqxqHJtj9hmvRfoeIrvHDC',
     name: 'Polyanalyser Lite Monthly',
     description: 'Essential AI-powered market analysis for casual traders',
     price: 9.99,
@@ -39,8 +39,8 @@ export const stripeProducts: StripeProduct[] = [
     ]
   },
   {
-    id: 'prod_TvcRG9pESdAScE',
-    priceId: 'price_1SxlCsHJtj9hmvRftE3jQIpY',
+    id: 'prod_TviO1p9ZrGoOik',
+    priceId: 'price_1SxqxiHJtj9hmvRfk91AktpL',
     name: 'Polyanalyser Lite Annually',
     description: 'Essential AI-powered market analysis for casual traders (Annual)',
     price: 95.90,
@@ -57,8 +57,8 @@ export const stripeProducts: StripeProduct[] = [
     ]
   },
   {
-    id: 'prod_TvcOiGvFdJU34Y',
-    priceId: 'price_1Sxl9qHJtj9hmvRfepiVyPpW',
+    id: 'prod_TviOM1Q13sAsUv',
+    priceId: 'price_1SxqxmHJtj9hmvRfHHkPAIFd',
     name: 'Polyanalyser Pro Monthly',
     description: 'Advanced AI analysis with premium features for serious traders',
     price: 49.00,
@@ -76,8 +76,8 @@ export const stripeProducts: StripeProduct[] = [
     ]
   },
   {
-    id: 'prod_TvcTQuhGDcVLjW',
-    priceId: 'price_1SxlE7HJtj9hmvRfTdZBX7pU',
+    id: 'prod_TviORKHIPRGg67',
+    priceId: 'price_1SxqxeHJtj9hmvRfSoD4q1o3',
     name: 'Polyanalyser Pro Annually',
     description: 'Advanced AI analysis with premium features for serious traders (Annual)',
     price: 470.00,
