@@ -295,7 +295,7 @@ export function PricingSection() {
                   tier === 'free'
                     ? 'bg-green-500 text-white cursor-default'
                     : isDowngrade('free') && user
-                    ? 'bg-slate-500 disabled:from-orange-400 disabled:to-red-400 disabled:cursor-not-allowed'
+                    ? 'bg-slate-500 text-white disabled:from-orange-400 disabled:to-red-400 disabled:cursor-not-allowed'
                     : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-2 border-gray-200'
                 }`}
               >
