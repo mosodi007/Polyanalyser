@@ -81,7 +81,7 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
     switch (tier) {
       case 'pro':
         return 'bg-gradient-to-r from-amber-500 to-orange-500 text-white';
-      case 'premium':
+      case 'lite':
         return 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white';
       default:
         return 'bg-gray-600 text-white';
@@ -96,9 +96,10 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
             {user && (
               <button
                 onClick={() => navigate('/history')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600"
+                className="flex items-center gap-2 px-3 py-1.5 hover:bg-black/5 rounded-lg transition-all text-black/70 hover:text-black"
               >
-                History
+                <History className="w-4 h-4" />
+                <span className="text-sm font-medium">History</span>
               </button>
             )}
           </div>
@@ -129,24 +130,24 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
                     <div className="p-1">
                       <button
                         onClick={handlePricingClick}
-                        className="w-full flex gap-2 px-2 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium"
+                        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium"
                       >
                         <CreditCard className="w-4 h-4" />
                         Pricing & Subscription
                       </button>
                       <button
                         onClick={handleAccountClick}
-                        className="w-full flex gap-2 px-2 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium"
+                        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium"
                       >
                         <UserIcon className="w-4 h-4" />
-                        Account
+                        My Account
                       </button>
                       <button
                         onClick={handleLogout}
-                        className="w-full flex gap-2 px-2 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium"
+                        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-black/5 rounded-md transition-colors text-red-600 text-sm font-medium"
                       >
                         <LogOut className="w-4 h-4" />
-                        Sign Out
+                        Log Out
                       </button>
                     </div>
                   </div>

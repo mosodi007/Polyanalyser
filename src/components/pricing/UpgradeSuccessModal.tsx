@@ -117,7 +117,7 @@ export function UpgradeSuccessModal({
           <div className="space-y-3">
             <button
               onClick={handleStartAnalyzing}
-              className="w-full flex justify-center items-center py-3.5 px-6 rounded-xl font-semibold text-white bg-[#1552F0] hover:shadow-xl transition-all"
+              className="w-full flex justify-center items-center py-3.5 px-6 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 shadow-lg hover:shadow-xl transition-all"
             >
               Start Analyzing Markets
               <ArrowRight className="ml-2 h-5 w-5" />

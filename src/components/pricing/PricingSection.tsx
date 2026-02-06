@@ -255,12 +255,12 @@ export function PricingSection() {
           {/* Free Tier */}
           <div className={`relative rounded-2xl border-2 bg-white p-8 shadow-sm transition-all ${
             tier === 'free'
-              ? 'border-slate-500'
+              ? 'border-green-500 ring-4 ring-green-100'
               : 'border-gray-200 hover:shadow-md'
           }`}>
             {tier === 'free' && (
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="bg-slate-500 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-md">
+                <span className="bg-green-500 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-md">
                   Current Plan
                 </span>
               </div>
@@ -293,9 +293,9 @@ export function PricingSection() {
                 disabled={tier === 'free' || loading === 'free'}
                 className={`mt-8 w-full py-3 px-6 rounded-lg font-medium transition-all ${
                   tier === 'free'
-                    ? 'bg-slate-500 text-white cursor-default'
+                    ? 'bg-green-500 text-white cursor-default'
                     : isDowngrade('free') && user
-                    ? 'bg-slate-400 text-white disabled:from-orange-400 disabled:to-red-400 disabled:cursor-not-allowed'
+                    ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white hover:from-orange-700 hover:to-red-700 shadow-md hover:shadow-lg disabled:from-orange-400 disabled:to-red-400 disabled:cursor-not-allowed'
                     : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-2 border-gray-200'
                 }`}
               >
