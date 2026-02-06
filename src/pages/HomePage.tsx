@@ -172,17 +172,7 @@ export function HomePage() {
           ))}
         </div>
 
-        <div className="mt-12 text-center">
-          <p className="text-black/60 mb-4">
-            Ready to start analyzing Polymarket prediction markets?
-          </p>
-          {/* <button
-            onClick={() => navigate('/signup')}
-            className="px-8 py-3 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-medium rounded-lg transition-all shadow-md hover:shadow-lg"
-          >
-            Get Started Free
-          </button> */}
-        </div>
+        
       </div>
     </div>
   );
