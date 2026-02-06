@@ -81,26 +81,41 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
     switch (tier) {
       case 'pro':
         return 'bg-gradient-to-r from-amber-500 to-orange-500 text-white';
-      case 'lite':
+import { Link, useLocation } from 'react-router-dom';
         return 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white';
       default:
+            className={`px-3 py-2 text-sm font-medium ${
+              location.pathname === '/' 
+                ? 'text-indigo-600 border-b-2 border-indigo-600' 
+                : 'text-gray-700 hover:text-indigo-600'
+            }`}
         return 'bg-gray-600 text-white';
     }
   };
+  const location = useLocation();
 
-  return (
+            className={`px-3 py-2 text-sm font-medium ${
+              location.pathname === '/dashboard' 
+                ? 'text-indigo-600 border-b-2 border-indigo-600' 
+                : 'text-gray-700 hover:text-indigo-600'
+            }`}
     <header className={minimal ? "bg-white border-b border-black/5" : "bg-white/80 backdrop-blur-sm border-b border-black/5"}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div className="flex items-center justify-between">
+          <Link
+            to="/pricing"
+            className={`px-3 py-2 text-sm font-medium ${
+              location.pathname === '/pricing' 
+                ? 'text-indigo-600 border-b-2 border-indigo-600' 
+                : 'text-gray-700 hover:text-indigo-600'
+            }`}
+          >
+            Pricing
+          </Link>
           <div className="flex items-center gap-4">
             {user && (
               <button
                 onClick={() => navigate('/history')}
-                className="flex items-center gap-2 px-3 py-1.5 hover:bg-black/5 rounded-lg transition-all text-black/70 hover:text-black"
-              >
-                <History className="w-4 h-4" />
-                <span className="text-sm font-medium">History</span>
-              </button>
             )}
           </div>
 
@@ -137,21 +152,29 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
                       </button>
                       <button
                         onClick={handleAccountClick}
-                        className="w-full flex gap-3 px-3 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium"
-                      >
-                        <UserIcon className="w-4 h-4" />
-                        My Account
-                      </button>
-                      <button
-                        onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-black/5 rounded-md transition-colors text-red-600 text-sm font-medium"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        Log Out
-                      </button>
-                    </div>
-                  </div>
+            <div className="flex items-center space-x-3">
+              <SubscriptionBadge />
+              <div className="relative group">
+                <button className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600">
+                  <User className="h-5 w-5" />
+                  <span className="text-sm font-medium">{user.email}</span>
                 )}
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <Link
+                    to="/settings"
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    Settings
+                  </Link>
+                  <button
+                    onClick={signOut}
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign Out
+                  </button>
+                </div>
               </div>
             ) : (
               <>
