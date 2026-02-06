@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { CookieConsent } from './components/CookieConsent';
@@ -20,9 +20,12 @@ import { supabase } from './lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
 function App() {
+  const location = useLocation();
   const [user, setUser] = useState<User | null>(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
+
+  const hideHeaderFooter = ['/confirmation-sent', '/verify-email'].includes(location.pathname);
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -78,12 +81,14 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <Header
-        user={user}
-        onLoginClick={() => setShowLogin(true)}
-        onSignupClick={() => setShowSignup(true)}
-        minimal
-      />
+      {!hideHeaderFooter && (
+        <Header
+          user={user}
+          onLoginClick={() => setShowLogin(true)}
+          onSignupClick={() => setShowSignup(true)}
+          minimal
+        />
+      )}
 
       <main className="flex-1">
         <Routes>
@@ -129,7 +134,7 @@ function App() {
         />
       )}
 
-      <Footer />
+      {!hideHeaderFooter && <Footer />}
       <CookieConsent />
     </div>
   );
