@@ -63,9 +63,7 @@ export default function VerifyEmailPage() {
 
       setVerificationStatus('success');
       setTimeout(() => {
-        navigate('/login', {
-          state: { message: 'Email verified successfully! You can now log in.' }
-        });
+        navigate('/search');
       }, 2000);
     } catch (error: any) {
       console.error('Verification error:', error);
@@ -120,7 +118,7 @@ export default function VerifyEmailPage() {
                   Email Verified!
                 </h1>
                 <p className="text-gray-600">
-                  Your email has been successfully verified. Redirecting you to login...
+                  Your email has been successfully verified. Redirecting you to search...
                 </p>
               </>
             )}
@@ -164,7 +162,7 @@ export default function VerifyEmailPage() {
             <div className="bg-green-50 rounded-xl p-6">
               <div className="flex items-center justify-center space-x-2 text-green-700">
                 <Loader2 className="w-5 h-5 animate-spin" />
-                <span className="font-medium">Redirecting to login...</span>
+                <span className="font-medium">Redirecting to search...</span>
               </div>
             </div>
           )}
