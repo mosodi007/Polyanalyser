@@ -255,7 +255,7 @@ export function PricingSection() {
           {/* Free Tier */}
           <div className={`relative rounded-2xl border-2 bg-white p-8 shadow-sm transition-all ${
             tier === 'free'
-              ? 'border-green-500 ring-4 ring-green-100'
+              ? 'border-slate-500'
               : 'border-gray-200 hover:shadow-md'
           }`}>
             {tier === 'free' && (
@@ -295,7 +295,7 @@ export function PricingSection() {
                   tier === 'free'
                     ? 'bg-green-500 text-white cursor-default'
                     : isDowngrade('free') && user
-                    ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white hover:from-orange-700 hover:to-red-700 shadow-md hover:shadow-lg disabled:from-orange-400 disabled:to-red-400 disabled:cursor-not-allowed'
+                    ? 'bg-slate-500 text-white disabled:from-orange-400 disabled:to-red-400 disabled:cursor-not-allowed'
                     : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-2 border-gray-200'
                 }`}
               >

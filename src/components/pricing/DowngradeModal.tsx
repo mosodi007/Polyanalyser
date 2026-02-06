@@ -51,7 +51,7 @@ export function DowngradeModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl max-w-lg w-full shadow-2xl border border-white/20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-50/50 via-white/50 to-red-50/50 pointer-events-none" />
+        <div className="absolute inset-0 bg-slate-500 pointer-events-none" />
 
         <div className="relative p-8">
           <button
@@ -63,7 +63,7 @@ export function DowngradeModal({
           </button>
 
           <div className="text-center mb-6">
-            <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-red-500 shadow-lg mb-4">
+            <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-slate-500 mb-4">
               <AlertTriangle className="h-9 w-9 text-white" />
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Confirm Downgrade</h2>
@@ -84,7 +84,7 @@ export function DowngradeModal({
             </div>
 
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl transform -rotate-1 opacity-20" />
+              <div className="absolute inset-0 bg-slate-500 rounded-2xl transform -rotate-1 opacity-20" />
               <div className="relative bg-white rounded-2xl p-5 border border-orange-200 shadow-lg">
                 <p className="text-xs uppercase tracking-wider text-orange-600 mb-1">Downgrading to</p>
                 <p className="text-xl font-bold text-gray-900">{newPlanName}</p>

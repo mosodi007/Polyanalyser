@@ -96,8 +96,9 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
             {user && (
               <button
                 onClick={() => navigate('/history')}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600"
+                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-[#1552F0]"
               >
+                <History className="w-4 h-4" />
                 History
               </button>
             )}
@@ -129,24 +130,24 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
                     <div className="p-1">
                       <button
                         onClick={handlePricingClick}
-                        className="w-full flex gap-2 px-2 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium"
+                        className="w-full flex items-center gap-2 px-2 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium text-left"
                       >
-                        <CreditCard className="w-4 h-4" />
-                        Pricing & Subscription
+                        <CreditCard className="w-4 h-4 flex-shrink-0" />
+                        <span>Pricing & Subscription</span>
                       </button>
                       <button
                         onClick={handleAccountClick}
-                        className="w-full flex gap-2 px-2 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium"
+                        className="w-full flex items-center gap-2 px-2 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium text-left"
                       >
-                        <UserIcon className="w-4 h-4" />
-                        Account
+                        <UserIcon className="w-4 h-4 flex-shrink-0" />
+                        <span>Account</span>
                       </button>
                       <button
                         onClick={handleLogout}
-                        className="w-full flex gap-2 px-2 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium"
+                        className="w-full flex items-center gap-2 px-2 py-2 hover:bg-black/5 rounded-md transition-colors text-black text-sm font-medium text-left"
                       >
-                        <LogOut className="w-4 h-4" />
-                        Sign Out
+                        <LogOut className="w-4 h-4 flex-shrink-0" />
+                        <span>Sign Out</span>
                       </button>
                     </div>
                   </div>
