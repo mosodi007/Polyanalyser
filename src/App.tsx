@@ -13,6 +13,7 @@ import { SignupPage } from './pages/SignupPage';
 import { PricingPage } from './pages/PricingPage';
 import { SuccessPage } from './pages/SuccessPage';
 import { AccountPage } from './pages/AccountPage';
+import { StripeTestPage } from './pages/StripeTestPage';
 import { supabase } from './lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
@@ -100,6 +101,7 @@ function App() {
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route path="/stripe-test" element={<StripeTestPage />} />
         </Routes>
       </main>
 

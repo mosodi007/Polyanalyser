@@ -1,21 +1,112 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, ArrowRight } from 'lucide-react';
+import { CheckCircle, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { useSubscription } from '../hooks/useSubscription';
 
 export function SuccessPage() {
+  const [syncing, setSyncing] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { tier, refresh } = useSubscription();
+
+  useEffect(() => {
+    syncSubscription();
+  }, []);
+
+  const syncSubscription = async () => {
+    try {
+      setSyncing(true);
+      setError(null);
+
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        setError('Not authenticated');
+        setSyncing(false);
+        return;
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-subscription`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to sync subscription');
+      }
+
+      const result = await response.json();
+      console.log('Subscription synced:', result);
+
+      // Refresh subscription state
+      await refresh();
+
+    } catch (err) {
+      console.error('Sync error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to sync subscription');
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 text-center">
         <div>
-          <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-green-100">
-            <CheckCircle className="h-10 w-10 text-green-600" />
-          </div>
+          {syncing ? (
+            <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-blue-100">
+              <Loader2 className="h-10 w-10 text-blue-600 animate-spin" />
+            </div>
+          ) : error ? (
+            <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-yellow-100">
+              <AlertCircle className="h-10 w-10 text-yellow-600" />
+            </div>
+          ) : (
+            <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-green-100">
+              <CheckCircle className="h-10 w-10 text-green-600" />
+            </div>
+          )}
+
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Payment Successful!
+            {syncing ? 'Processing Payment...' : error ? 'Payment Received' : 'Payment Successful!'}
           </h2>
-          <p className="mt-2 text-lg text-gray-600">
-            Thank you for subscribing to PolyAnalyser. Your account has been upgraded and you now have access to all premium features.
-          </p>
+
+          {syncing ? (
+            <p className="mt-2 text-lg text-gray-600">
+              Please wait while we activate your subscription...
+            </p>
+          ) : error ? (
+            <div className="mt-2 space-y-2">
+              <p className="text-lg text-gray-600">
+                Your payment was successful, but we're having trouble activating your account.
+              </p>
+              <p className="text-sm text-gray-500">
+                Don't worry! Your subscription will be activated shortly. If the issue persists, contact support.
+              </p>
+              <button
+                onClick={syncSubscription}
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
+          ) : (
+            <div className="mt-2 space-y-2">
+              <p className="text-lg text-gray-600">
+                Thank you for subscribing to PolyAnalyser. Your account has been upgraded to <span className="font-semibold capitalize">{tier}</span> tier.
+              </p>
+              <p className="text-sm text-gray-500">
+                You now have access to all premium features!
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">

@@ -54,74 +54,119 @@ Deno.serve(async (req) => {
 });
 
 async function handleEvent(event: Stripe.Event) {
+  console.log(`[WEBHOOK] Received event: ${event.type}, ID: ${event.id}`);
+
   const stripeData = event?.data?.object ?? {};
 
   if (!stripeData) {
+    console.warn('[WEBHOOK] No data object in event');
     return;
   }
 
-  if (!('customer' in stripeData)) {
-    return;
-  }
-
-  // for one time payments, we only listen for the checkout.session.completed event
-  if (event.type === 'payment_intent.succeeded' && event.data.object.invoice === null) {
-    return;
-  }
-
-  const { customer: customerId } = stripeData;
-
-  if (!customerId || typeof customerId !== 'string') {
-    console.error(`No customer received on event: ${JSON.stringify(event)}`);
-  } else {
-    let isSubscription = true;
-
-    if (event.type === 'checkout.session.completed') {
-      const { mode } = stripeData as Stripe.Checkout.Session;
-
-      isSubscription = mode === 'subscription';
-
-      console.info(`Processing ${isSubscription ? 'subscription' : 'one-time payment'} checkout session`);
-    }
-
-    const { mode, payment_status } = stripeData as Stripe.Checkout.Session;
-
-    if (isSubscription) {
-      console.info(`Starting subscription sync for customer: ${customerId}`);
-      await syncCustomerFromStripe(customerId);
-    } else if (mode === 'payment' && payment_status === 'paid') {
-      try {
-        // Extract the necessary information from the session
-        const {
-          id: checkout_session_id,
-          payment_intent,
-          amount_subtotal,
-          amount_total,
-          currency,
-        } = stripeData as Stripe.Checkout.Session;
-
-        // Insert the order into the stripe_orders table
-        const { error: orderError } = await supabase.from('stripe_orders').insert({
-          checkout_session_id,
-          payment_intent_id: payment_intent,
-          customer_id: customerId,
-          amount_subtotal,
-          amount_total,
-          currency,
-          payment_status,
-          status: 'completed', // assuming we want to mark it as completed since payment is successful
-        });
-
-        if (orderError) {
-          console.error('Error inserting order:', orderError);
-          return;
-        }
-        console.info(`Successfully processed one-time payment for session: ${checkout_session_id}`);
-      } catch (error) {
-        console.error('Error processing one-time payment:', error);
+  // Handle different event types
+  switch (event.type) {
+    case 'checkout.session.completed':
+      await handleCheckoutSessionCompleted(event);
+      break;
+    case 'customer.subscription.created':
+    case 'customer.subscription.updated':
+    case 'customer.subscription.deleted':
+      await handleSubscriptionChange(event);
+      break;
+    case 'invoice.payment_succeeded':
+      await handleInvoicePaymentSucceeded(event);
+      break;
+    case 'invoice.payment_failed':
+      await handleInvoicePaymentFailed(event);
+      break;
+    case 'payment_intent.succeeded':
+      // Only handle if not part of subscription
+      if (event.data.object.invoice === null) {
+        console.log('[WEBHOOK] One-time payment succeeded (not handling)');
       }
+      break;
+    default:
+      console.log(`[WEBHOOK] Unhandled event type: ${event.type}`);
+  }
+}
+
+async function handleCheckoutSessionCompleted(event: Stripe.Event) {
+  const session = event.data.object as Stripe.Checkout.Session;
+  const customerId = session.customer as string;
+
+  if (!customerId) {
+    console.error('[WEBHOOK] No customer in checkout session');
+    return;
+  }
+
+  console.log(`[WEBHOOK] Checkout completed for customer: ${customerId}, mode: ${session.mode}`);
+
+  if (session.mode === 'subscription') {
+    console.log('[WEBHOOK] Subscription checkout - syncing customer');
+    await syncCustomerFromStripe(customerId);
+  } else if (session.mode === 'payment' && session.payment_status === 'paid') {
+    console.log('[WEBHOOK] One-time payment completed');
+    try {
+      const { error: orderError } = await supabase.from('stripe_orders').insert({
+        checkout_session_id: session.id,
+        payment_intent_id: session.payment_intent as string,
+        customer_id: customerId,
+        amount_subtotal: session.amount_subtotal,
+        amount_total: session.amount_total,
+        currency: session.currency,
+        payment_status: session.payment_status,
+        status: 'completed',
+      });
+
+      if (orderError) {
+        console.error('[WEBHOOK] Error inserting order:', orderError);
+      } else {
+        console.log(`[WEBHOOK] Successfully processed one-time payment: ${session.id}`);
+      }
+    } catch (error) {
+      console.error('[WEBHOOK] Error processing one-time payment:', error);
     }
   }
+}
+
+async function handleSubscriptionChange(event: Stripe.Event) {
+  const subscription = event.data.object as Stripe.Subscription;
+  const customerId = subscription.customer as string;
+
+  if (!customerId) {
+    console.error('[WEBHOOK] No customer in subscription event');
+    return;
+  }
+
+  console.log(`[WEBHOOK] Subscription ${event.type} for customer: ${customerId}`);
+  await syncCustomerFromStripe(customerId);
+}
+
+async function handleInvoicePaymentSucceeded(event: Stripe.Event) {
+  const invoice = event.data.object as Stripe.Invoice;
+  const customerId = invoice.customer as string;
+
+  if (!customerId) {
+    console.error('[WEBHOOK] No customer in invoice event');
+    return;
+  }
+
+  console.log(`[WEBHOOK] Invoice payment succeeded for customer: ${customerId}`);
+  await syncCustomerFromStripe(customerId);
+}
+
+async function handleInvoicePaymentFailed(event: Stripe.Event) {
+  const invoice = event.data.object as Stripe.Invoice;
+  const customerId = invoice.customer as string;
+
+  if (!customerId) {
+    console.error('[WEBHOOK] No customer in failed invoice event');
+    return;
+  }
+
+  console.log(`[WEBHOOK] Invoice payment failed for customer: ${customerId}`);
+  // Still sync to update status
+  await syncCustomerFromStripe(customerId);
 }
 
 function getTierFromPriceId(priceId: string): string {
