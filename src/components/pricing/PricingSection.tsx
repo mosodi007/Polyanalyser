@@ -341,11 +341,6 @@ export function PricingSection() {
           )}
         </div>
 
-        <div className="mt-12 text-center">
-          <p className="text-gray-600">
-            All paid plans include a 7-day free trial. Cancel anytime.
-          </p>
-        </div>
       </div>
 
       {selectedPlanForUpgrade && (
