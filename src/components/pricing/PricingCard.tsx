@@ -37,16 +37,16 @@ export function PricingCard({ product, onSelect, loading = false, popular = fals
         <div className="mt-8">
           <div className="flex items-baseline justify-center">
             <span className="text-5xl font-bold text-gray-900">
-              {formatPrice(product.price, product.currency)}
+              {formatPrice(isAnnual ? monthlyEquivalent : product.price, product.currency)}
             </span>
             <span className="ml-2 text-lg text-gray-500">
-              /{product.interval}
+              /month
             </span>
           </div>
           {isAnnual && (
-            <div className="mt-3 inline-block bg-green-50 px-3 py-1 rounded-full">
-              <p className="text-sm font-medium text-green-700">
-                {formatPrice(monthlyEquivalent, product.currency)}/mo billed annually
+            <div className="mt-3">
+              <p className="text-sm text-gray-600">
+                Billed {formatPrice(product.price, product.currency)} annually
               </p>
             </div>
           )}
