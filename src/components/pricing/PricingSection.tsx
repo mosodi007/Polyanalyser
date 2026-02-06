@@ -11,7 +11,7 @@ type BillingInterval = 'month' | 'year';
 export function PricingSection() {
   const [loading, setLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
-  const [billingInterval, setBillingInterval] = useState<BillingInterval>('month');
+  const [billingInterval, setBillingInterval] = useState<BillingInterval>('year');
   const { user } = useAuth();
   const navigate = useNavigate();
 
