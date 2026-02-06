@@ -136,7 +136,7 @@ export function HomePage() {
         </div>
       </div>
 
-      {/* <div className="w-full max-w-4xl mx-auto px-4 mt-24 mb-16">
+      <div className="w-full max-w-4xl mx-auto px-4 mt-24 mb-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-black mb-3">
             Frequently Asked Questions About Polymarket Analysis
@@ -176,13 +176,13 @@ export function HomePage() {
           <p className="text-black/60 mb-4">
             Ready to start analyzing Polymarket prediction markets?
           </p>
-          <button
+          {/* <button
             onClick={() => navigate('/signup')}
             className="px-8 py-3 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-medium rounded-lg transition-all shadow-md hover:shadow-lg"
           >
             Get Started Free
-          </button>
-        </div> */}
+          </button> */}
+        </div>
       </div>
     </div>
   );
