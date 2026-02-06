@@ -152,7 +152,7 @@ async function syncCustomerFromStripe(customerId: string) {
       const { error: noSubError } = await supabase.from('stripe_subscriptions').upsert(
         {
           customer_id: customerId,
-          subscription_status: 'not_started',
+          status: 'not_started',
         },
         {
           onConflict: 'customer_id',
@@ -164,13 +164,24 @@ async function syncCustomerFromStripe(customerId: string) {
         throw new Error('Failed to update subscription status in database');
       }
 
-      const { error: tierError } = await supabase
-        .from('user_profiles')
-        .update({ subscription_tier: 'free' })
-        .eq('id', customerId);
+      // Look up the user_id from stripe_customers table
+      const { data: customerData, error: customerError } = await supabase
+        .from('stripe_customers')
+        .select('user_id')
+        .eq('customer_id', customerId)
+        .maybeSingle();
 
-      if (tierError) {
-        console.error('Error updating user tier to free:', tierError);
+      if (customerError) {
+        console.error('Error fetching customer data for tier downgrade:', customerError);
+      } else if (customerData) {
+        const { error: tierError } = await supabase
+          .from('user_profiles')
+          .update({ subscription_tier: 'free' })
+          .eq('id', customerData.user_id);
+
+        if (tierError) {
+          console.error('Error updating user tier to free:', tierError);
+        }
       }
 
       return;
