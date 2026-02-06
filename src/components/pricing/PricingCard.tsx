@@ -70,7 +70,7 @@ export function PricingCard({ product, onSelect, loading = false, popular = fals
             isCurrentTier
               ? 'bg-[#000] text-white cursor-default'
               : isDowngrade
-              ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white hover:from-orange-700 hover:to-red-700 shadow-md hover:shadow-lg disabled:from-orange-400 disabled:to-red-400'
+              ? 'bg-slate-800 text-white hover:slate-500 shadow-md hover:shadow-lg disabled:from-orange-400 disabled:to-red-400'
               : isUpgrade
               ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-md hover:shadow-lg disabled:from-green-400 disabled:to-emerald-400'
               : popular
