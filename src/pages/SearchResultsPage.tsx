@@ -42,6 +42,7 @@ export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const query = searchParams.get('q') || '';
+  const marketId = searchParams.get('market_id') || '';
   const categoryParam = searchParams.get('category') || 'all';
   const statusParam = searchParams.get('status') || 'all';
 
@@ -55,10 +56,12 @@ export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'active' | 'closed'>(statusParam as any);
 
   useEffect(() => {
-    if (query) {
+    if (marketId) {
+      loadMarketById(marketId);
+    } else if (query) {
       performSearch(query);
     }
-  }, [query]);
+  }, [query, marketId]);
 
   const performSearch = async (searchTerm: string) => {
     if (!searchTerm.trim()) return;
@@ -89,6 +92,43 @@ export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps
       }
     } catch (err) {
       setError('Failed to search markets. Please try again.');
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const loadMarketById = async (id: string) => {
+    setSearching(true);
+    setError(null);
+
+    try {
+      const fullMarket = await PolymarketService.fetchMarketByConditionId(id);
+      if (!fullMarket) {
+        setError('Market not found');
+        return;
+      }
+
+      const market: Market = {
+        id: fullMarket.id,
+        title: fullMarket.question,
+        description: fullMarket.description,
+        category: PolymarketService.getCategoryFromMarket(fullMarket),
+        current_price: PolymarketService.extractYesPriceFromMarket(fullMarket),
+        volume: parseFloat(fullMarket.volume || '0'),
+        liquidity: parseFloat(fullMarket.liquidity || '0'),
+        close_time: fullMarket.endDate,
+        active: fullMarket.active,
+        closed: fullMarket.closed,
+      };
+
+      const { data: existingAnalysis } = await DataSyncService.getMarketAnalysis(id);
+
+      setSelectedMarket({
+        market,
+        analysis: existingAnalysis || undefined,
+      });
+    } catch (err: any) {
+      setError(err.message || 'Failed to load market');
     } finally {
       setSearching(false);
     }
@@ -185,43 +225,52 @@ export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="sticky top-0 bg-white border-b border-black/10 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate('/')}
-              className="flex items-center gap-2 text-black hover:text-black/70 transition-colors"
-            >
-              <ChevronLeft className="w-5 h-5" />
-              <img
-                src="/polyanalyser.png"
-                alt="PolyAnalyser"
-                className="w-6 h-6"
-              />
-              <span className="text-xl font-bold">PolyAnalyser</span>
-            </button>
-
-            <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-black/40" />
-                </div>
-                <input
-                  type="search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search prediction markets..."
-                  className="w-full pl-12 pr-4 py-2.5 text-sm bg-white rounded-full border border-black/20 hover:border-black/30 focus:border-[#1552F0] focus:outline-none focus:shadow-md transition-all text-black placeholder-black/40"
+      {!marketId && (
+        <div className="sticky top-0 bg-white border-b border-black/10 z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate('/')}
+                className="flex items-center gap-2 text-black hover:text-black/70 transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5" />
+                <img
+                  src="/polyanalyser.png"
+                  alt="PolyAnalyser"
+                  className="w-6 h-6"
                 />
-              </div>
-            </form>
+                <span className="text-xl font-bold">PolyAnalyser</span>
+              </button>
+
+              <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Search className="h-5 w-5 text-black/40" />
+                  </div>
+                  <input
+                    type="search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search prediction markets..."
+                    className="w-full pl-12 pr-4 py-2.5 text-sm bg-white rounded-full border border-black/20 hover:border-black/30 focus:border-[#1552F0] focus:outline-none focus:shadow-md transition-all text-black placeholder-black/40"
+                  />
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {!searching && searchResults.length > 0 && categories.length > 0 && (
+      {marketId && searching && (
+        <div className="flex justify-center items-center min-h-[60vh]">
+          <LoadingSpinner size="large" />
+        </div>
+      )}
+
+      {!marketId && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {!searching && searchResults.length > 0 && categories.length > 0 && (
             <aside className="lg:w-64 shrink-0">
               <div className="sticky top-24">
                 <h3 className="text-sm font-medium text-black/70 mb-3 px-3">Filters</h3>
@@ -404,13 +453,19 @@ export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps
             )}
           </main>
         </div>
-      </div>
+        </div>
+      )}
 
       {selectedMarket && (
         <MarketDetail
           market={selectedMarket.market}
           analysis={selectedMarket.analysis}
-          onClose={() => setSelectedMarket(null)}
+          onClose={() => {
+            setSelectedMarket(null);
+            if (marketId) {
+              navigate('/history');
+            }
+          }}
         />
       )}
     </div>

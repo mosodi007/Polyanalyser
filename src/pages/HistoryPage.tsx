@@ -142,7 +142,7 @@ export function HistoryPage({ user }: HistoryPageProps) {
             {history.map((item) => (
               <button
                 key={item.id}
-                onClick={() => navigate(`/search?q=${encodeURIComponent(item.market_title || '')}`)}
+                onClick={() => navigate(`/search?market_id=${encodeURIComponent(item.market_id)}`)}
                 className="w-full glass-white hover:shadow-lg transition-all rounded-xl p-5 border border-black/5 text-left group"
               >
                 <div className="flex items-start justify-between gap-4">
