@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { CookieConsent } from './components/CookieConsent';
@@ -16,7 +16,7 @@ import { AccountPage } from './pages/AccountPage';
 import { supabase } from './lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
-function Dashboard() {
+function App() {
   const [user, setUser] = useState<User | null>(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
@@ -74,7 +74,7 @@ function Dashboard() {
   };
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-white">
       <Header
         user={user}
         onLoginClick={() => setShowLogin(true)}
@@ -95,6 +95,11 @@ function Dashboard() {
             }
           />
           <Route path="/history" element={<HistoryPage user={user} />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/success" element={<SuccessPage />} />
+          <Route path="/account" element={<AccountPage />} />
         </Routes>
       </main>
 
@@ -120,25 +125,7 @@ function Dashboard() {
 
       <Footer />
       <CookieConsent />
-    </>
-  );
-}
-
-function App() {
-  return (
-    <Router>
-      <div className="min-h-screen flex flex-col bg-white">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/success" element={<SuccessPage />} />
-          <Route path="/account" element={<AccountPage />} />
-        </Routes>
-      </div>
-    </Router>
+    </div>
   );
 }
 
