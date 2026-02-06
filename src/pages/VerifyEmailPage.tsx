@@ -63,7 +63,7 @@ export default function VerifyEmailPage() {
 
       setVerificationStatus('success');
       setTimeout(() => {
-        navigate('/search');
+        navigate('/.');
       }, 2000);
     } catch (error: any) {
       console.error('Verification error:', error);
