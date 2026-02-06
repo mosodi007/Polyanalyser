@@ -136,7 +136,7 @@ export function HomePage() {
         </div>
       </div>
 
-      <div className="w-full max-w-4xl mx-auto px-4 mt-24 mb-16">
+      {/* <div className="w-full max-w-4xl mx-auto px-4 mt-24 mb-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-black mb-3">
             Frequently Asked Questions About Polymarket Analysis
@@ -144,7 +144,7 @@ export function HomePage() {
           <p className="text-black/60">
             Everything you need to know about using PolyAnalyser for Polymarket prediction markets
           </p>
-        </div>
+        </div> */}
 
         {/* <div className="space-y-4">
           {faqs.map((faq, index) => (
