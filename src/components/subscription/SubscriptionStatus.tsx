@@ -17,7 +17,7 @@ export function SubscriptionStatus() {
     );
   }
 
-  if (!subscription || subscription.subscription_status === 'not_started') {
+  if (!subscription || subscription.status === 'not_started') {
     return (
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
         <div className="flex items-center">
@@ -32,7 +32,7 @@ export function SubscriptionStatus() {
   }
 
   const product = subscription.price_id ? getProductByPriceId(subscription.price_id) : null;
-  const isActive = ['active', 'trialing'].includes(subscription.subscription_status);
+  const isActive = subscription.status ? ['active', 'trialing'].includes(subscription.status) : false;
 
   return (
     <div className={`rounded-lg shadow p-6 ${
@@ -52,7 +52,7 @@ export function SubscriptionStatus() {
             <p className={`text-sm ${
               isActive ? 'text-green-700' : 'text-red-700'
             }`}>
-              Status: {subscription.subscription_status.replace('_', ' ')}
+              Status: {subscription.status?.replace('_', ' ') || 'Unknown'}
             </p>
           </div>
         </div>

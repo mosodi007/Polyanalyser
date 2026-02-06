@@ -7,7 +7,7 @@ import { SubscriptionTier, getTierByPriceId } from '../stripe-config';
 interface Subscription {
   customer_id: string;
   subscription_id: string | null;
-  subscription_status: string;
+  status: string;
   price_id: string | null;
   current_period_start: number | null;
   current_period_end: number | null;

@@ -196,7 +196,7 @@ export function StripeTestPage() {
                 Subscription Status
               </label>
               <span className="text-lg font-semibold">
-                {subscription?.subscription_status || 'None'}
+                {subscription?.status || 'None'}
               </span>
             </div>
 
