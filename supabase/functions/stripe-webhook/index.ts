@@ -210,15 +210,28 @@ async function syncCustomerFromStripe(customerId: string) {
     const isActive = subscription.status === 'active' || subscription.status === 'trialing';
     const tier = isActive ? getTierFromPriceId(priceId) : 'free';
 
-    const { error: tierError } = await supabase
-      .from('user_profiles')
-      .update({ subscription_tier: tier })
-      .eq('id', customerId);
+    // Look up the user_id from stripe_customers table
+    const { data: customerData, error: customerError } = await supabase
+      .from('stripe_customers')
+      .select('user_id')
+      .eq('customer_id', customerId)
+      .maybeSingle();
 
-    if (tierError) {
-      console.error('Error updating user tier:', tierError);
+    if (customerError) {
+      console.error('Error fetching customer data:', customerError);
+    } else if (customerData) {
+      const { error: tierError } = await supabase
+        .from('user_profiles')
+        .update({ subscription_tier: tier })
+        .eq('id', customerData.user_id);
+
+      if (tierError) {
+        console.error('Error updating user tier:', tierError);
+      } else {
+        console.info(`Updated user ${customerData.user_id} to tier: ${tier}`);
+      }
     } else {
-      console.info(`Updated user ${customerId} to tier: ${tier}`);
+      console.error(`No user found for customer ${customerId}`);
     }
 
     console.info(`Successfully synced subscription for customer: ${customerId}`);
