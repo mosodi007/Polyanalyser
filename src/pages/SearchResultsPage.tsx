@@ -3,8 +3,11 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, TrendingUp, DollarSign, Users, Sparkles, ChevronLeft } from 'lucide-react';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { MarketDetail } from '../components/MarketDetail';
+import { UsageIndicator } from '../components/UsageIndicator';
 import { DataSyncService } from '../services/data-sync.service';
 import { PolymarketService } from '../services/polymarket.service';
+import { UsageService } from '../services/usage.service';
+import { useSubscription } from '../hooks/useSubscription';
 import type { User } from '@supabase/supabase-js';
 
 interface Market {
@@ -56,6 +59,8 @@ export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam);
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'active' | 'closed'>(statusParam as any);
+
+  const { usage, refreshUsage } = useSubscription();
 
   useEffect(() => {
     if (marketId) {
@@ -153,6 +158,12 @@ export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps
       return;
     }
 
+    const usageCheck = await UsageService.checkCanAnalyze(user.id);
+    if (!usageCheck.canAnalyze) {
+      setError(usageCheck.message || 'You have reached your daily analysis limit.');
+      return;
+    }
+
     setAnalyzingMarketId(market.id);
     setError(null);
 
@@ -163,7 +174,11 @@ export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps
         return;
       }
 
-      await DataSyncService.analyzeAndStoreMarket(fullMarket);
+      await DataSyncService.analyzeAndStoreMarket(fullMarket, user.id);
+
+      await UsageService.incrementUsage(user.id);
+      await refreshUsage();
+
       const { data, error: dbError } = await DataSyncService.getMarketAnalysis(market.id);
 
       if (dbError) {
@@ -278,8 +293,11 @@ export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps
           <div className="flex flex-col lg:flex-row gap-6">
             {!searching && searchResults.length > 0 && categories.length > 0 && (
             <aside className="lg:w-64 shrink-0">
-              <div className="sticky top-24">
-                <h3 className="text-sm font-medium text-black/70 mb-3 px-3">Filters</h3>
+              <div className="sticky top-24 space-y-6">
+                {user && <UsageIndicator />}
+
+                <div>
+                  <h3 className="text-sm font-medium text-black/70 mb-3 px-3">Filters</h3>
 
                 <div className="mb-6">
                   <h4 className="text-xs font-medium text-black/50 mb-2 px-3 uppercase tracking-wide">Status</h4>
@@ -336,6 +354,7 @@ export function SearchResultsPage({ user, onLoginClick }: SearchResultsPageProps
                       </button>
                     ))}
                   </div>
+                </div>
                 </div>
               </div>
             </aside>

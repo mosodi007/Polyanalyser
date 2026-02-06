@@ -4,7 +4,7 @@ import { AIAnalysisService } from './ai.service';
 import type { PolymarketMarket } from './polymarket.types';
 
 export class DataSyncService {
-  static async analyzeAndStoreMarket(market: PolymarketMarket): Promise<void> {
+  static async analyzeAndStoreMarket(market: PolymarketMarket, userId: string): Promise<void> {
     try {
       console.log('Analyzing market:', market.question);
       console.log('Market data:', { id: market.id, outcomePrices: market.outcomePrices });
@@ -43,6 +43,7 @@ export class DataSyncService {
       const insertData = {
         market_id: market.id,
         market_title: market.question,
+        user_id: userId,
         ai_probability: analysis.aiProbability,
         market_probability: analysis.marketProbability,
         edge_percentage: analysis.edgePercentage,

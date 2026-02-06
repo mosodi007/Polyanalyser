@@ -1,3 +1,5 @@
+export type SubscriptionTier = 'free' | 'lite' | 'pro';
+
 export interface StripeProduct {
   id: string;
   priceId: string;
@@ -8,6 +10,14 @@ export interface StripeProduct {
   mode: 'subscription' | 'payment';
   interval?: 'month' | 'year';
   features: string[];
+  tier: SubscriptionTier;
+}
+
+export interface TierLimits {
+  tier: SubscriptionTier;
+  dailyAnalyses: number;
+  name: string;
+  price: number;
 }
 
 export const stripeProducts: StripeProduct[] = [
@@ -20,9 +30,10 @@ export const stripeProducts: StripeProduct[] = [
     currency: 'usd',
     mode: 'subscription',
     interval: 'month',
+    tier: 'lite',
     features: [
+      '50 AI analyses per day',
       'Basic AI market analysis',
-      'Up to 10 markets per day',
       'Email alerts',
       'Basic performance tracking'
     ]
@@ -36,9 +47,10 @@ export const stripeProducts: StripeProduct[] = [
     currency: 'usd',
     mode: 'subscription',
     interval: 'year',
+    tier: 'lite',
     features: [
+      '50 AI analyses per day',
       'Basic AI market analysis',
-      'Up to 10 markets per day',
       'Email alerts',
       'Basic performance tracking',
       '2 months free vs monthly'
@@ -53,9 +65,10 @@ export const stripeProducts: StripeProduct[] = [
     currency: 'usd',
     mode: 'subscription',
     interval: 'month',
+    tier: 'pro',
     features: [
+      'Unlimited AI analyses',
       'Advanced AI market analysis',
-      'Unlimited markets',
       'Real-time alerts',
       'Advanced performance tracking',
       'Portfolio optimization',
@@ -71,9 +84,10 @@ export const stripeProducts: StripeProduct[] = [
     currency: 'usd',
     mode: 'subscription',
     interval: 'year',
+    tier: 'pro',
     features: [
+      'Unlimited AI analyses',
       'Advanced AI market analysis',
-      'Unlimited markets',
       'Real-time alerts',
       'Advanced performance tracking',
       'Portfolio optimization',
@@ -83,8 +97,45 @@ export const stripeProducts: StripeProduct[] = [
   }
 ];
 
+export const tierLimits: Record<SubscriptionTier, TierLimits> = {
+  free: {
+    tier: 'free',
+    dailyAnalyses: 5,
+    name: 'Free',
+    price: 0
+  },
+  lite: {
+    tier: 'lite',
+    dailyAnalyses: 50,
+    name: 'Lite',
+    price: 9.99
+  },
+  pro: {
+    tier: 'pro',
+    dailyAnalyses: -1, // -1 means unlimited
+    name: 'Pro',
+    price: 49.00
+  }
+};
+
+export const freeTierFeatures = [
+  '5 AI analyses per day',
+  'Basic AI market analysis',
+  'Email alerts',
+  'Community support'
+];
+
 export function getProductByPriceId(priceId: string): StripeProduct | undefined {
   return stripeProducts.find(product => product.priceId === priceId);
+}
+
+export function getTierByPriceId(priceId: string): SubscriptionTier {
+  const product = getProductByPriceId(priceId);
+  return product?.tier || 'free';
+}
+
+export function getTierLimits(tier: SubscriptionTier): TierLimits {
+  return tierLimits[tier];
 }
 
 export function formatPrice(price: number, currency: string): string {

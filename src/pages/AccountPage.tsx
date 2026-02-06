@@ -1,11 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { User, Settings, CreditCard, ArrowLeft } from 'lucide-react';
+import { User, Settings, CreditCard, ArrowLeft, Activity, TrendingUp } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { useSubscription } from '../hooks/useSubscription';
 import { SubscriptionStatus } from '../components/subscription/SubscriptionStatus';
+import { UsageService } from '../services/usage.service';
+import { getTierLimits } from '../stripe-config';
 
 export function AccountPage() {
   const { user, signOut } = useAuth();
+  const { tier, usage, loading: subscriptionLoading } = useSubscription();
 
   if (!user) {
     return (
@@ -19,6 +23,13 @@ export function AccountPage() {
       </div>
     );
   }
+
+  const tierInfo = getTierLimits(tier);
+  const usagePercentage = usage?.isUnlimited
+    ? 100
+    : usage
+    ? Math.round((usage.usedToday / usage.dailyLimit) * 100)
+    : 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -73,9 +84,9 @@ export function AccountPage() {
                 <CreditCard className="h-6 w-6 text-gray-400 mr-3" />
                 <h2 className="text-xl font-semibold text-gray-900">Subscription</h2>
               </div>
-              
+
               <SubscriptionStatus />
-              
+
               <div className="mt-6">
                 <Link
                   to="/pricing"
@@ -84,6 +95,89 @@ export function AccountPage() {
                   View All Plans
                 </Link>
               </div>
+            </div>
+
+            {/* Usage Statistics Section */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center mb-6">
+                <Activity className="h-6 w-6 text-gray-400 mr-3" />
+                <h2 className="text-xl font-semibold text-gray-900">Usage Statistics</h2>
+              </div>
+
+              {subscriptionLoading ? (
+                <div className="text-sm text-gray-500">Loading...</div>
+              ) : (
+                <div className="space-y-6">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">Current Plan</span>
+                      <span className="text-sm font-semibold text-gray-900 capitalize">
+                        {tierInfo.name}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700">Daily Analyses</span>
+                      <span className="text-sm font-semibold text-gray-900">
+                        {usage?.isUnlimited ? (
+                          'Unlimited'
+                        ) : (
+                          `${usage?.usedToday || 0} / ${usage?.dailyLimit || 0}`
+                        )}
+                      </span>
+                    </div>
+                  </div>
+
+                  {!usage?.isUnlimited && (
+                    <div>
+                      <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+                        <span>Usage Today</span>
+                        <span>{usagePercentage}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-500 ${
+                            usagePercentage >= 100
+                              ? 'bg-red-500'
+                              : usagePercentage >= 80
+                              ? 'bg-orange-500'
+                              : 'bg-gradient-to-r from-blue-500 to-cyan-500'
+                          }`}
+                          style={{ width: `${Math.min(usagePercentage, 100)}%` }}
+                        />
+                      </div>
+                      <p className="mt-2 text-xs text-gray-500 text-center">
+                        {usage?.remainingToday || 0} analyses remaining today
+                      </p>
+                    </div>
+                  )}
+
+                  {usage?.isUnlimited && (
+                    <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-4 text-center">
+                      <TrendingUp className="h-8 w-8 text-purple-600 mx-auto mb-2" />
+                      <p className="text-sm font-medium text-purple-900">
+                        {usage.usedToday} analyses today
+                      </p>
+                      <p className="text-xs text-purple-700 mt-1">
+                        Unlimited analyses available
+                      </p>
+                    </div>
+                  )}
+
+                  {tier === 'free' && usage && !usage.canAnalyze && (
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                      <p className="text-sm text-orange-800 font-medium">
+                        You've reached your daily limit
+                      </p>
+                      <Link
+                        to="/pricing"
+                        className="mt-2 inline-flex items-center text-sm text-orange-600 hover:text-orange-700 font-medium"
+                      >
+                        Upgrade to analyze more markets
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

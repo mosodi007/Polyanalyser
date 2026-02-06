@@ -124,6 +124,17 @@ async function handleEvent(event: Stripe.Event) {
   }
 }
 
+function getTierFromPriceId(priceId: string): string {
+  const tierMapping: Record<string, string> = {
+    'price_1Sxl8xHJtj9hmvRftM9cClgJ': 'lite',
+    'price_1SxlCsHJtj9hmvRftE3jQIpY': 'lite',
+    'price_1Sxl9qHJtj9hmvRfepiVyPpW': 'pro',
+    'price_1SxlE7HJtj9hmvRfTdZBX7pU': 'pro',
+  };
+
+  return tierMapping[priceId] || 'free';
+}
+
 // based on the excellent https://github.com/t3dotgg/stripe-recommendations
 async function syncCustomerFromStripe(customerId: string) {
   try {
@@ -152,17 +163,29 @@ async function syncCustomerFromStripe(customerId: string) {
         console.error('Error updating subscription status:', noSubError);
         throw new Error('Failed to update subscription status in database');
       }
+
+      const { error: tierError } = await supabase
+        .from('user_profiles')
+        .update({ subscription_tier: 'free' })
+        .eq('id', customerId);
+
+      if (tierError) {
+        console.error('Error updating user tier to free:', tierError);
+      }
+
+      return;
     }
 
     // assumes that a customer can only have a single subscription
     const subscription = subscriptions.data[0];
+    const priceId = subscription.items.data[0].price.id;
 
     // store subscription state
     const { error: subError } = await supabase.from('stripe_subscriptions').upsert(
       {
         customer_id: customerId,
         subscription_id: subscription.id,
-        price_id: subscription.items.data[0].price.id,
+        price_id: priceId,
         current_period_start: subscription.current_period_start,
         current_period_end: subscription.current_period_end,
         cancel_at_period_end: subscription.cancel_at_period_end,
@@ -183,6 +206,21 @@ async function syncCustomerFromStripe(customerId: string) {
       console.error('Error syncing subscription:', subError);
       throw new Error('Failed to sync subscription in database');
     }
+
+    const isActive = subscription.status === 'active' || subscription.status === 'trialing';
+    const tier = isActive ? getTierFromPriceId(priceId) : 'free';
+
+    const { error: tierError } = await supabase
+      .from('user_profiles')
+      .update({ subscription_tier: tier })
+      .eq('id', customerId);
+
+    if (tierError) {
+      console.error('Error updating user tier:', tierError);
+    } else {
+      console.info(`Updated user ${customerId} to tier: ${tier}`);
+    }
+
     console.info(`Successfully synced subscription for customer: ${customerId}`);
   } catch (error) {
     console.error(`Failed to sync subscription for customer ${customerId}:`, error);
