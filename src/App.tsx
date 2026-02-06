@@ -19,6 +19,10 @@ import VerifyEmailPage from './pages/VerifyEmailPage';
 import { TermsPage } from './pages/TermsPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { CookiePolicyPage } from './pages/CookiePolicyPage';
+import { PolymarketAnalysisPage } from './pages/PolymarketAnalysisPage';
+import { PolymarketPredictionToolPage } from './pages/PolymarketPredictionToolPage';
+import { PolymarketAIBotPage } from './pages/PolymarketAIBotPage';
+import { HowItWorksPage } from './pages/HowItWorksPage';
 import { supabase } from './lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
@@ -117,6 +121,10 @@ function App() {
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/cookies" element={<CookiePolicyPage />} />
+          <Route path="/polymarket-analysis" element={<PolymarketAnalysisPage />} />
+          <Route path="/polymarket-prediction-tool" element={<PolymarketPredictionToolPage />} />
+          <Route path="/polymarket-ai-bot" element={<PolymarketAIBotPage />} />
+          <Route path="/how-it-works" element={<HowItWorksPage />} />
         </Routes>
       </main>
 

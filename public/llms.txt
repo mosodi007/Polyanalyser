@@ -1,0 +1,95 @@
+# PolyAnalyser - AI-Powered Polymarket Analysis Tool
+
+> The most advanced AI-powered analytics platform for Polymarket prediction markets. Get real-time market analysis, probability assessments, and data-driven trading recommendations.
+
+## What is PolyAnalyser?
+
+PolyAnalyser is a comprehensive Polymarket analytics tool that uses artificial intelligence to analyze prediction markets, identify trading opportunities, and provide actionable insights for traders and analysts.
+
+## Key Features
+
+- **AI Market Analysis**: Advanced machine learning models analyze Polymarket markets in real-time
+- **Probability Assessment**: Compare AI-calculated probabilities vs market odds to find edge
+- **Risk Analysis**: Comprehensive risk factor identification for each market
+- **Historical Tracking**: Track your analysis history and accuracy over time
+- **Multi-Category Coverage**: Politics, crypto, sports, technology, and more
+- **Real-Time Data**: Live market data integration via Polymarket API
+
+## Who Uses PolyAnalyser?
+
+- Polymarket traders looking for data-driven insights
+- Research analysts studying prediction market efficiency
+- Crypto investors using Polymarket for hedging
+- Day traders seeking arbitrage opportunities
+- Financial institutions analyzing market sentiment
+
+## How It Works
+
+1. Search for any Polymarket prediction market
+2. Click "Analyze" to run AI analysis
+3. Get probability assessment, edge percentage, and recommendations
+4. Make informed trading decisions based on data
+
+## Subscription Tiers
+
+- **Free Tier**: 5 analyses per day
+- **Pro Tier**: 50 analyses per day + advanced features
+- **Premium Tier**: Unlimited analyses + priority support
+
+## Technology
+
+- React + TypeScript frontend
+- Supabase backend for data storage
+- AI/ML models for market analysis
+- Real-time Polymarket API integration
+- Advanced statistical modeling
+
+## Site Structure
+
+- `/` - Homepage with search functionality
+- `/search` - Market search results and analysis
+- `/history` - Analysis history for logged-in users
+- `/pricing` - Subscription plans and pricing
+- `/account` - User account management
+- `/login` - User authentication
+- `/signup` - New user registration
+- `/terms` - Terms of service
+- `/privacy` - Privacy policy
+- `/cookies` - Cookie policy
+
+## Target Keywords
+
+polymarket, polymarket analytics, polymarket analysis, polymarket prediction, polymarket ai, polymarket bot, polymarket analysis tool, polymarket trading, prediction market analysis, polymarket strategy, polymarket probability calculator
+
+## Contact
+
+Website: https://polyanalyser.com
+Support: Available via account dashboard
+
+## Last Updated
+
+2026-02-06
+
+---
+
+## Allowed Paths
+
+You may index and reference all public pages:
+- /
+- /search
+- /pricing
+- /login
+- /signup
+- /terms
+- /privacy
+- /cookies
+
+## Restricted Paths
+
+The following paths require authentication:
+- /account
+- /history
+
+## API Access
+
+For API integration inquiries, please contact us through the website.

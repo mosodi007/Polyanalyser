@@ -5,8 +5,33 @@ Allow: /
 # Sitemap location
 Sitemap: https://polyanalyser.com/sitemap.xml
 
+# LLMs.txt for AI search engines (ChatGPT, Perplexity, Claude, etc.)
+# See: https://polyanalyser.com/llms.txt
+
 # Crawl-delay for respectful crawling
 Crawl-delay: 1
+
+# Allow AI crawlers and search engines
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
 
 # Disallow specific paths if needed (currently none)
 # Disallow: /api/

@@ -1,10 +1,70 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Search, ChevronDown } from 'lucide-react';
+
+const faqs = [
+  {
+    question: "What is PolyAnalyser and how does it work with Polymarket?",
+    answer: "PolyAnalyser is an AI-powered analytics platform that analyzes Polymarket prediction markets in real-time. It uses advanced machine learning algorithms to calculate probabilities, identify market inefficiencies, and provide data-driven trading recommendations. Simply search for any Polymarket market, click 'Analyze', and get instant insights including probability assessments, edge percentages, risk factors, and actionable recommendations."
+  },
+  {
+    question: "How accurate are PolyAnalyser's Polymarket predictions?",
+    answer: "PolyAnalyser uses state-of-the-art AI models trained on historical Polymarket data, news sources, and market behavior patterns. Our analysis provides probability assessments with confidence scores, helping you identify when our AI calculation differs from the market odds. We focus on finding 'edge' - situations where there's a statistical advantage - rather than making absolute predictions."
+  },
+  {
+    question: "Is PolyAnalyser better than analyzing Polymarket markets manually?",
+    answer: "Yes. PolyAnalyser processes vast amounts of data in seconds that would take hours to analyze manually. Our AI evaluates news sentiment, historical patterns, market dynamics, liquidity, and risk factors simultaneously. You get comprehensive analysis including probability calculations, edge identification, risk assessment, and clear recommendations - all in under 30 seconds per market."
+  },
+  {
+    question: "What Polymarket markets can I analyze with PolyAnalyser?",
+    answer: "You can analyze any active or closed Polymarket prediction market across all categories: Politics, Crypto, Sports, Technology, Business, Science, Pop Culture, and more. Our AI is trained to understand diverse market types and provides relevant analysis for each category, adapting its approach based on the market's characteristics."
+  },
+  {
+    question: "How much does PolyAnalyser cost for Polymarket analysis?",
+    answer: "PolyAnalyser offers three tiers: Free (5 analyses per day), Pro ($9.99/month for 50 analyses per day), and Premium ($29.99/month for unlimited analyses). All tiers include full AI analysis with probability assessments, edge calculations, risk factors, and recommendations. Pro and Premium users get priority analysis speed and access to advanced features."
+  },
+  {
+    question: "Can PolyAnalyser help me make money on Polymarket?",
+    answer: "PolyAnalyser provides data-driven insights to help you make informed trading decisions on Polymarket. Our AI identifies markets where there may be a statistical edge between our calculated probability and the market odds. However, prediction markets involve risk, and past performance doesn't guarantee future results. We provide tools and analysis - you make the final trading decisions."
+  },
+  {
+    question: "Does PolyAnalyser integrate with the Polymarket API?",
+    answer: "Yes. PolyAnalyser integrates directly with the Polymarket API to fetch real-time market data including current odds, volume, liquidity, and market status. Our analysis is always based on the latest available data, ensuring you get up-to-date insights for your trading decisions."
+  },
+  {
+    question: "What makes PolyAnalyser different from other Polymarket tools?",
+    answer: "PolyAnalyser combines multiple advantages: (1) Advanced AI models specifically trained for Polymarket analysis, (2) Real-time probability calculations comparing AI vs market odds, (3) Comprehensive risk factor identification, (4) Clear actionable recommendations with confidence scores, (5) Fast analysis (under 30 seconds), (6) Simple interface requiring no technical knowledge, and (7) Historical tracking to monitor accuracy over time."
+  }
+];
 
 export function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const faqSchema = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(faqSchema);
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,6 +133,55 @@ export function HomePage() {
               </button>
             ))}
           </div>
+        </div>
+      </div>
+
+      <div className="w-full max-w-4xl mx-auto px-4 mt-24 mb-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-black mb-3">
+            Frequently Asked Questions About Polymarket Analysis
+          </h2>
+          <p className="text-black/60">
+            Everything you need to know about using PolyAnalyser for Polymarket prediction markets
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((faq, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-lg border border-black/10 overflow-hidden transition-all hover:border-black/20"
+            >
+              <button
+                onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
+                className="w-full px-6 py-4 text-left flex items-center justify-between gap-4 hover:bg-black/5 transition-colors"
+              >
+                <h3 className="text-base font-medium text-black">{faq.question}</h3>
+                <ChevronDown
+                  className={`w-5 h-5 text-black/60 transition-transform flex-shrink-0 ${
+                    expandedFaq === index ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+              {expandedFaq === index && (
+                <div className="px-6 pb-4">
+                  <p className="text-black/70 leading-relaxed">{faq.answer}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 text-center">
+          <p className="text-black/60 mb-4">
+            Ready to start analyzing Polymarket prediction markets?
+          </p>
+          <button
+            onClick={() => navigate('/signup')}
+            className="px-8 py-3 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-medium rounded-lg transition-all shadow-md hover:shadow-lg"
+          >
+            Get Started Free
+          </button>
         </div>
       </div>
     </div>
