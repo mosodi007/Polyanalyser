@@ -41,7 +41,7 @@ export function HomePage() {
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search prediction markets..."
+              placeholder="Copy and paste from Polymarket..."
               className="w-full pl-14 pr-6 py-4 text-base bg-white rounded-full border border-black/10 hover:border-black/20 focus:border-[#1552F0] focus:outline-none focus:shadow-lg transition-all text-black placeholder-black/40"
               autoFocus
             />
