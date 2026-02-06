@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, TrendingUp, TrendingDown, ChevronRight } from 'lucide-react';
+import { Clock, TrendingUp, TrendingDown, ChevronRight, ArrowLeft } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import type { User } from '@supabase/supabase-js';
@@ -104,6 +104,14 @@ export function HistoryPage({ user }: HistoryPageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-white">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <button
+          onClick={() => navigate('/')}
+          className="inline-flex items-center gap-2 px-4 py-2 mb-6 hover:bg-black/5 rounded-lg transition-all text-black/70 hover:text-black"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="font-medium">Back to Home</span>
+        </button>
+
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-black mb-2">Analysis History</h1>
           <p className="text-black/60">View your past market analyses</p>
