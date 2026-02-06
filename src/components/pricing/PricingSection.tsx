@@ -293,7 +293,7 @@ export function PricingSection() {
                 disabled={tier === 'free' || loading === 'free'}
                 className={`mt-8 w-full py-3 px-6 rounded-lg font-medium transition-all ${
                   tier === 'free'
-                    ? 'bg-slate-500 text-white cursor-default'
+                    ? 'bg-slate-100 text-white cursor-default'
                     : isDowngrade('free') && user
                     ? 'bg-slate-500 text-white disabled:from-orange-400 disabled:to-red-400 disabled:cursor-not-allowed'
                     : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-2 border-gray-200'
