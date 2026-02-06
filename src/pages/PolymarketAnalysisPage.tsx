@@ -112,7 +112,7 @@ export function PolymarketAnalysisPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={() => navigate('/signup')}
+              onClick={() => navigate('/')}
               className="px-8 py-4 bg-[#1552F0] hover:bg-[#0f3ec4] text-white font-medium rounded-lg transition-all shadow-md hover:shadow-lg"
             >
               Start Analyzing Free
