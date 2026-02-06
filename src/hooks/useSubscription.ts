@@ -46,18 +46,31 @@ export function useSubscription() {
 
     const fetchSubscription = async () => {
       try {
-        const { data: subscriptionData, error: subError } = await supabase
-          .from('stripe_subscriptions')
-          .select('*')
-          .eq('customer_id', user.id)
-          .in('status', ['active', 'trialing'])
+        // First, get the Stripe customer_id for this user
+        const { data: customerData } = await supabase
+          .from('stripe_customers')
+          .select('customer_id')
+          .eq('user_id', user.id)
           .maybeSingle();
 
-        if (subError && subError.code !== 'PGRST116') {
-          console.error('Error fetching subscription:', subError);
+        let activeSub: Subscription | null = null;
+
+        if (customerData?.customer_id) {
+          // Then fetch subscription using the Stripe customer_id
+          const { data: subscriptionData, error: subError } = await supabase
+            .from('stripe_subscriptions')
+            .select('*')
+            .eq('customer_id', customerData.customer_id)
+            .in('status', ['active', 'trialing'])
+            .maybeSingle();
+
+          if (subError && subError.code !== 'PGRST116') {
+            console.error('Error fetching subscription:', subError);
+          }
+
+          activeSub = subscriptionData as unknown as Subscription | null;
         }
 
-        const activeSub = subscriptionData as unknown as Subscription | null;
         setSubscription(activeSub);
 
         const currentTier = activeSub?.price_id
