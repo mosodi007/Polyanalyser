@@ -152,3 +152,51 @@ export async function previewUpgrade(newPriceId: string): Promise<PreviewUpgrade
 
   return result;
 }
+
+interface DowngradeSubscriptionResponse {
+  success: boolean;
+  subscription: any;
+  effectiveDate: string;
+  message: string;
+  error?: string;
+}
+
+export async function downgradeSubscription(newPriceId?: string, cancelAtPeriodEnd?: boolean): Promise<DowngradeSubscriptionResponse> {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session?.access_token) {
+    throw new Error('No authentication token found');
+  }
+
+  const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/downgrade-subscription`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.access_token}`,
+      'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify({
+      newPriceId,
+      cancelAtPeriodEnd,
+    }),
+  });
+
+  if (!response.ok) {
+    let errorMessage = 'Failed to downgrade subscription';
+    try {
+      const error = await response.json();
+      errorMessage = error.error || errorMessage;
+    } catch {
+      errorMessage = `Server error (${response.status}): ${response.statusText}`;
+    }
+    throw new Error(errorMessage);
+  }
+
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.error || 'Failed to downgrade subscription');
+  }
+
+  return result;
+}

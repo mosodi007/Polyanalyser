@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { PricingCard } from './PricingCard';
 import { UpgradeModal } from './UpgradeModal';
 import { UpgradeSuccessModal } from './UpgradeSuccessModal';
+import { DowngradeModal } from './DowngradeModal';
 import { stripeProducts, StripeProduct, freeTierFeatures } from '../../stripe-config';
 import { useAuth } from '../../hooks/useAuth';
 import { useSubscription } from '../../hooks/useSubscription';
-import { createCheckoutSession, updateSubscription, previewUpgrade } from '../../lib/stripe';
+import { createCheckoutSession, updateSubscription, previewUpgrade, downgradeSubscription } from '../../lib/stripe';
 import { Check } from 'lucide-react';
 
 type BillingInterval = 'month' | 'year';
@@ -17,9 +18,12 @@ export function PricingSection() {
   const [billingInterval, setBillingInterval] = useState<BillingInterval>('year');
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [upgradeSuccessModalOpen, setUpgradeSuccessModalOpen] = useState(false);
+  const [downgradeModalOpen, setDowngradeModalOpen] = useState(false);
   const [selectedPlanForUpgrade, setSelectedPlanForUpgrade] = useState<StripeProduct | null>(null);
+  const [selectedPlanForDowngrade, setSelectedPlanForDowngrade] = useState<StripeProduct | 'free' | null>(null);
   const [upgradedPlan, setUpgradedPlan] = useState<{ name: string; tier: string } | null>(null);
   const [proratedAmount, setProratedAmount] = useState<number | undefined>(undefined);
+  const [downgradeEffectiveDate, setDowngradeEffectiveDate] = useState<string | undefined>(undefined);
   const { user } = useAuth();
   const { tier, refresh } = useSubscription();
   const navigate = useNavigate();
@@ -31,9 +35,23 @@ export function PricingSection() {
     return tierOrder[product.tier] > tierOrder[tier];
   };
 
+  const isDowngrade = (product: StripeProduct | 'free'): boolean => {
+    if (!user || tier === 'free') return false;
+
+    const tierOrder = { free: 0, lite: 1, pro: 2 };
+    const targetTier = product === 'free' ? 'free' : product.tier;
+    return tierOrder[targetTier] < tierOrder[tier];
+  };
+
   const handleSelectPlan = async (product: StripeProduct) => {
     if (!user) {
       navigate('/login');
+      return;
+    }
+
+    if (isDowngrade(product)) {
+      setSelectedPlanForDowngrade(product);
+      setDowngradeModalOpen(true);
       return;
     }
 
@@ -130,6 +148,44 @@ export function PricingSection() {
     }
   };
 
+  const handleConfirmDowngrade = async () => {
+    if (!selectedPlanForDowngrade) return;
+
+    const loadingKey = selectedPlanForDowngrade === 'free' ? 'free' : selectedPlanForDowngrade.priceId;
+    setLoading(loadingKey);
+    setMessage(null);
+
+    try {
+      const result = await downgradeSubscription(
+        selectedPlanForDowngrade === 'free' ? undefined : selectedPlanForDowngrade.priceId,
+        selectedPlanForDowngrade === 'free' ? true : false
+      );
+
+      if (result.success) {
+        setMessage({
+          type: 'success',
+          text: result.message
+        });
+        setDowngradeModalOpen(false);
+
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+      } else {
+        throw new Error(result.error || 'Failed to downgrade subscription');
+      }
+    } catch (error) {
+      console.error('Downgrade error:', error);
+      setMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : 'Failed to downgrade subscription'
+      });
+      setDowngradeModalOpen(false);
+    } finally {
+      setLoading(null);
+    }
+  };
+
   // Group products by tier
   const liteProducts = stripeProducts.filter(p => p.name.includes('Lite'));
   const proProducts = stripeProducts.filter(p => p.name.includes('Pro'));
@@ -221,15 +277,29 @@ export function PricingSection() {
               </div>
 
               <button
-                onClick={() => navigate(user ? '/' : '/signup')}
-                disabled={tier === 'free'}
+                onClick={() => {
+                  if (tier === 'free') return;
+                  if (!user) {
+                    navigate('/signup');
+                    return;
+                  }
+                  if (isDowngrade('free')) {
+                    setSelectedPlanForDowngrade('free');
+                    setDowngradeModalOpen(true);
+                  } else {
+                    navigate('/');
+                  }
+                }}
+                disabled={tier === 'free' || loading === 'free'}
                 className={`mt-8 w-full py-3 px-6 rounded-lg font-medium transition-all ${
                   tier === 'free'
                     ? 'bg-green-500 text-white cursor-default'
+                    : isDowngrade('free') && user
+                    ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white hover:from-orange-700 hover:to-red-700 shadow-md hover:shadow-lg disabled:from-orange-400 disabled:to-red-400 disabled:cursor-not-allowed'
                     : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border-2 border-gray-200'
                 }`}
               >
-                {tier === 'free' ? 'Current Plan' : user ? 'Downgrade' : 'Upgrade'}
+                {loading === 'free' ? 'Processing...' : tier === 'free' ? 'Current Plan' : isDowngrade('free') && user ? 'Downgrade to Free' : user ? 'View' : 'Get Started'}
               </button>
             </div>
 
@@ -253,6 +323,7 @@ export function PricingSection() {
               loading={loading === selectedLite.priceId}
               isCurrentTier={tier === 'lite'}
               isUpgrade={isUpgrade(selectedLite)}
+              isDowngrade={isDowngrade(selectedLite)}
             />
           )}
 
@@ -265,6 +336,7 @@ export function PricingSection() {
               popular
               isCurrentTier={tier === 'pro'}
               isUpgrade={isUpgrade(selectedPro)}
+              isDowngrade={isDowngrade(selectedPro)}
             />
           )}
         </div>
@@ -303,6 +375,22 @@ export function PricingSection() {
           }}
           planName={upgradedPlan.name}
           planTier={upgradedPlan.tier}
+        />
+      )}
+
+      {selectedPlanForDowngrade && (
+        <DowngradeModal
+          isOpen={downgradeModalOpen}
+          onClose={() => {
+            setDowngradeModalOpen(false);
+            setSelectedPlanForDowngrade(null);
+            setDowngradeEffectiveDate(undefined);
+          }}
+          onConfirm={handleConfirmDowngrade}
+          currentPlan={tier}
+          newPlan={selectedPlanForDowngrade}
+          loading={loading === (selectedPlanForDowngrade === 'free' ? 'free' : selectedPlanForDowngrade.priceId)}
+          effectiveDate={downgradeEffectiveDate}
         />
       )}
     </div>
