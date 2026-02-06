@@ -72,7 +72,7 @@ export function PricingCard({ product, onSelect, loading = false, popular = fals
               : isDowngrade
               ? 'bg-slate-500 text-white hover:from-orange-700 hover:to-red-700 shadow-md hover:shadow-lg disabled:from-orange-400 disabled:to-red-400'
               : isUpgrade
-              ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-md hover:shadow-lg disabled:from-green-400 disabled:to-emerald-400'
+              ? 'bg-[#1552F0] text-white hover:from-green-700 hover:to-emerald-700 shadow-md hover:shadow-lg disabled:from-green-400 disabled:to-emerald-400'
               : popular
               ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 shadow-md hover:shadow-lg disabled:from-blue-400 disabled:to-cyan-400'
               : 'bg-gray-900 text-white hover:bg-gray-800 shadow-sm hover:shadow-md disabled:bg-gray-400'
