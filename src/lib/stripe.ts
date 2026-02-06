@@ -81,3 +81,41 @@ export async function updateSubscription(newPriceId: string): Promise<UpdateSubs
 
   return response.json();
 }
+
+interface PreviewUpgradeResponse {
+  success: boolean;
+  proratedAmount: number;
+  currency: string;
+  lines: Array<{
+    description: string;
+    amount: number;
+    proration: boolean;
+  }>;
+  error?: string;
+}
+
+export async function previewUpgrade(newPriceId: string): Promise<PreviewUpgradeResponse> {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session?.access_token) {
+    throw new Error('No authentication token found');
+  }
+
+  const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/preview-upgrade`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.access_token}`,
+    },
+    body: JSON.stringify({
+      newPriceId,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to preview upgrade');
+  }
+
+  return response.json();
+}

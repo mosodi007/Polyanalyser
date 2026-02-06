@@ -5,7 +5,7 @@ import { UpgradeModal } from './UpgradeModal';
 import { stripeProducts, StripeProduct, freeTierFeatures } from '../../stripe-config';
 import { useAuth } from '../../hooks/useAuth';
 import { useSubscription } from '../../hooks/useSubscription';
-import { createCheckoutSession, updateSubscription } from '../../lib/stripe';
+import { createCheckoutSession, updateSubscription, previewUpgrade } from '../../lib/stripe';
 import { Check } from 'lucide-react';
 
 type BillingInterval = 'month' | 'year';
@@ -35,8 +35,28 @@ export function PricingSection() {
     }
 
     if (isUpgrade(product)) {
-      setSelectedPlanForUpgrade(product);
-      setUpgradeModalOpen(true);
+      setLoading(product.priceId);
+      setMessage(null);
+
+      try {
+        const preview = await previewUpgrade(product.priceId);
+
+        if (preview.success) {
+          setProratedAmount(preview.proratedAmount);
+          setSelectedPlanForUpgrade(product);
+          setUpgradeModalOpen(true);
+        } else {
+          throw new Error(preview.error || 'Failed to preview upgrade');
+        }
+      } catch (error) {
+        console.error('Preview upgrade error:', error);
+        setMessage({
+          type: 'error',
+          text: error instanceof Error ? error.message : 'Failed to calculate upgrade cost'
+        });
+      } finally {
+        setLoading(null);
+      }
       return;
     }
 
