@@ -32,7 +32,7 @@ export function PricingCard({ product, onSelect, loading = false, popular = fals
         </div>
       ) : popular && (
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-          <span className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-md flex items-center gap-1.5">
+          <span className="bg-[#000] text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-md flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" />
             Most Popular
           </span>
