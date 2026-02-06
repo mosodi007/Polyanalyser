@@ -25,7 +25,7 @@ export function HomePage() {
             />
           </div>
           <h1 className="text-6xl sm:text-6xl font-bold text-black mb-4 tracking-tight">
-            Polymarket Analyser
+            Polyanalyser
           </h1>
           <p className="text-lg text-black/60">
             Search prediction markets, get instant AI analysis, and make data-driven trading decisions on Polymarket with advanced market intelligence and probability assessments
