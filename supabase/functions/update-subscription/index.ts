@@ -95,9 +95,23 @@ Deno.serve(async (req: Request) => {
             price: newPriceId,
           },
         ],
-        proration_behavior: "create_prorations",
+        proration_behavior: "always_invoice",
+        billing_cycle_anchor: "unchanged",
       }
     );
+
+    const invoices = await stripe.invoices.list({
+      customer: customer.customer_id,
+      subscription: subscription.subscription_id,
+      limit: 1,
+    });
+
+    let paidInvoice = null;
+    if (invoices.data.length > 0 && invoices.data[0].status === "draft") {
+      paidInvoice = await stripe.invoices.pay(invoices.data[0].id, {
+        paid_out_of_band: false,
+      });
+    }
 
     const upcomingInvoice = await stripe.invoices.retrieveUpcoming({
       customer: customer.customer_id,
@@ -108,6 +122,11 @@ Deno.serve(async (req: Request) => {
       JSON.stringify({
         success: true,
         subscription: updatedSubscription,
+        paidInvoice: paidInvoice ? {
+          id: paidInvoice.id,
+          amount_paid: paidInvoice.amount_paid,
+          status: paidInvoice.status,
+        } : null,
         upcomingInvoice: {
           amount_due: upcomingInvoice.amount_due,
           currency: upcomingInvoice.currency,
