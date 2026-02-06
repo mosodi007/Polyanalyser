@@ -46,7 +46,18 @@ function App() {
       .maybeSingle();
 
     if (!existingProfile) {
-      const fullName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+      let fullName = user.user_metadata?.full_name || user.user_metadata?.name;
+
+      if (!fullName && user.email) {
+        const emailUsername = user.email.split('@')[0];
+        fullName = emailUsername
+          .replace(/[._-]/g, ' ')
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+      }
+
+      fullName = fullName || 'User';
 
       await supabase
         .from('user_profiles')
