@@ -8,9 +8,10 @@ interface PricingCardProps {
   loading?: boolean;
   popular?: boolean;
   isCurrentTier?: boolean;
+  isUpgrade?: boolean;
 }
 
-export function PricingCard({ product, onSelect, loading = false, popular = false, isCurrentTier = false }: PricingCardProps) {
+export function PricingCard({ product, onSelect, loading = false, popular = false, isCurrentTier = false, isUpgrade = false }: PricingCardProps) {
   const isAnnual = product.interval === 'year';
   const monthlyEquivalent = isAnnual ? product.price / 12 : product.price;
 
@@ -67,12 +68,14 @@ export function PricingCard({ product, onSelect, loading = false, popular = fals
           className={`mt-8 w-full py-3.5 px-6 rounded-lg font-semibold transition-all ${
             isCurrentTier
               ? 'bg-[#000] text-white cursor-default'
+              : isUpgrade
+              ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-md hover:shadow-lg disabled:from-green-400 disabled:to-emerald-400'
               : popular
               ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 shadow-md hover:shadow-lg disabled:from-blue-400 disabled:to-cyan-400'
               : 'bg-gray-900 text-white hover:bg-gray-800 shadow-sm hover:shadow-md disabled:bg-gray-400'
           } disabled:cursor-not-allowed`}
         >
-          {loading ? 'Processing...' : isCurrentTier ? 'Current Plan' : 'Get Started'}
+          {loading ? 'Processing...' : isCurrentTier ? 'Current Plan' : isUpgrade ? 'Upgrade Plan' : 'Get Started'}
         </button>
       </div>
 

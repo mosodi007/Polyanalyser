@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PricingCard } from './PricingCard';
+import { UpgradeModal } from './UpgradeModal';
 import { stripeProducts, StripeProduct, freeTierFeatures } from '../../stripe-config';
 import { useAuth } from '../../hooks/useAuth';
 import { useSubscription } from '../../hooks/useSubscription';
-import { createCheckoutSession } from '../../lib/stripe';
+import { createCheckoutSession, updateSubscription } from '../../lib/stripe';
 import { Check } from 'lucide-react';
 
 type BillingInterval = 'month' | 'year';
@@ -13,13 +14,29 @@ export function PricingSection() {
   const [loading, setLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
   const [billingInterval, setBillingInterval] = useState<BillingInterval>('year');
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [selectedPlanForUpgrade, setSelectedPlanForUpgrade] = useState<StripeProduct | null>(null);
+  const [proratedAmount, setProratedAmount] = useState<number | undefined>(undefined);
   const { user } = useAuth();
   const { tier } = useSubscription();
   const navigate = useNavigate();
 
+  const isUpgrade = (product: StripeProduct): boolean => {
+    if (!user || tier === 'free') return false;
+
+    const tierOrder = { free: 0, lite: 1, pro: 2 };
+    return tierOrder[product.tier] > tierOrder[tier];
+  };
+
   const handleSelectPlan = async (product: StripeProduct) => {
     if (!user) {
       navigate('/login');
+      return;
+    }
+
+    if (isUpgrade(product)) {
+      setSelectedPlanForUpgrade(product);
+      setUpgradeModalOpen(true);
       return;
     }
 
@@ -43,6 +60,40 @@ export function PricingSection() {
         type: 'error',
         text: error instanceof Error ? error.message : 'Failed to start checkout process'
       });
+    } finally {
+      setLoading(null);
+    }
+  };
+
+  const handleConfirmUpgrade = async () => {
+    if (!selectedPlanForUpgrade) return;
+
+    setLoading(selectedPlanForUpgrade.priceId);
+    setMessage(null);
+
+    try {
+      const result = await updateSubscription(selectedPlanForUpgrade.priceId);
+
+      if (result.success) {
+        setMessage({
+          type: 'success',
+          text: 'Subscription upgraded successfully!'
+        });
+        setUpgradeModalOpen(false);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } else {
+        throw new Error(result.error || 'Failed to upgrade subscription');
+      }
+    } catch (error) {
+      console.error('Upgrade error:', error);
+      setMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : 'Failed to upgrade subscription'
+      });
+      setUpgradeModalOpen(false);
     } finally {
       setLoading(null);
     }
@@ -170,6 +221,7 @@ export function PricingSection() {
               onSelect={handleSelectPlan}
               loading={loading === selectedLite.priceId}
               isCurrentTier={tier === 'lite'}
+              isUpgrade={isUpgrade(selectedLite)}
             />
           )}
 
@@ -181,6 +233,7 @@ export function PricingSection() {
               loading={loading === selectedPro.priceId}
               popular
               isCurrentTier={tier === 'pro'}
+              isUpgrade={isUpgrade(selectedPro)}
             />
           )}
         </div>
@@ -191,6 +244,22 @@ export function PricingSection() {
           </p>
         </div>
       </div>
+
+      {selectedPlanForUpgrade && (
+        <UpgradeModal
+          isOpen={upgradeModalOpen}
+          onClose={() => {
+            setUpgradeModalOpen(false);
+            setSelectedPlanForUpgrade(null);
+            setProratedAmount(undefined);
+          }}
+          onConfirm={handleConfirmUpgrade}
+          currentPlan={tier}
+          newPlan={selectedPlanForUpgrade}
+          proratedAmount={proratedAmount}
+          loading={loading === selectedPlanForUpgrade.priceId}
+        />
+      )}
     </div>
   );
 }

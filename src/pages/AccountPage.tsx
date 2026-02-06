@@ -87,12 +87,30 @@ export function AccountPage() {
 
               <SubscriptionStatus />
 
+              {tier !== 'pro' && (
+                <div className="mt-4 bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  <div className="flex items-start gap-3">
+                    <TrendingUp className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium text-blue-900">
+                        {tier === 'free' ? 'Upgrade to unlock premium features' : 'Upgrade with prorated billing'}
+                      </p>
+                      <p className="text-xs text-blue-700 mt-1">
+                        {tier === 'lite'
+                          ? 'When you upgrade, you only pay the difference for the remaining time in your billing period.'
+                          : 'Get unlimited AI analyses and advanced features with our Pro plan.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="mt-6">
                 <Link
                   to="/pricing"
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#1552F0] hover:bg-[#0d3cb8] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1552F0]"
                 >
-                  View All Plans
+                  {tier === 'pro' ? 'View All Plans' : 'Upgrade Plan'}
                 </Link>
               </div>
             </div>
