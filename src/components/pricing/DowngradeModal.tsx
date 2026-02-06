@@ -51,7 +51,7 @@ export function DowngradeModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl max-w-lg w-full shadow-2xl border border-white/20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-50/50 via-white/50 to-red-50/50 pointer-events-none" />
+        <div className="absolute inset-0 bg-slate-500 pointer-events-none" />
 
         <div className="relative p-8">
           <button
