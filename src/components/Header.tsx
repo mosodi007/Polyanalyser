@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { LogOut, ChevronDown } from 'lucide-react';
+import { LogOut, ChevronDown, History } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
@@ -12,7 +13,9 @@ interface HeaderProps {
 
 export function Header({ user, onLoginClick, onSignupClick, minimal = false }: HeaderProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [fullName, setFullName] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -30,15 +33,54 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
     };
   }, [showUserMenu]);
 
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from('user_profiles')
+        .select('full_name')
+        .eq('id', user.id)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (data) {
+            setFullName(data.full_name);
+          }
+        });
+    } else {
+      setFullName(null);
+    }
+  }, [user]);
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setShowUserMenu(false);
   };
 
+  const displayName = fullName || user?.email || 'User';
+  const initials = fullName
+    ? fullName
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+    : user?.email?.[0].toUpperCase() || 'U';
+
   return (
     <header className={minimal ? "bg-white border-b border-black/5" : "bg-white/80 backdrop-blur-sm border-b border-black/5"}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            {user && (
+              <button
+                onClick={() => navigate('/history')}
+                className="flex items-center gap-2 px-3 py-1.5 hover:bg-black/5 rounded-lg transition-all text-black/70 hover:text-black"
+              >
+                <History className="w-4 h-4" />
+                <span className="text-sm font-medium">History</span>
+              </button>
+            )}
+          </div>
+
           <div className="flex items-center gap-2 sm:gap-3">
             {user ? (
               <div className="relative" ref={menuRef}>
@@ -47,10 +89,10 @@ export function Header({ user, onLoginClick, onSignupClick, minimal = false }: H
                   className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 hover:bg-black/5 rounded-lg transition-all"
                 >
                   <div className="w-7 h-7 bg-[#1552F0] rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                    {user.email?.[0].toUpperCase() || 'U'}
+                    {initials}
                   </div>
                   <span className="hidden sm:inline text-black text-sm font-medium max-w-[150px] truncate">
-                    {user.email}
+                    {displayName}
                   </span>
                   <ChevronDown className="w-4 h-4 text-black/50" />
                 </button>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Mail, Lock, Chrome, Eye, EyeOff } from 'lucide-react';
+import { X, Mail, Lock, Chrome, Eye, EyeOff, User } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface SignupProps {
@@ -8,6 +8,7 @@ interface SignupProps {
 }
 
 export function Signup({ onClose, onSwitchToLogin }: SignupProps) {
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -20,6 +21,11 @@ export function Signup({ onClose, onSwitchToLogin }: SignupProps) {
   const handleEmailSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!fullName.trim()) {
+      setError('Please enter your full name');
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
@@ -42,6 +48,15 @@ export function Signup({ onClose, onSwitchToLogin }: SignupProps) {
       if (signUpError) throw signUpError;
 
       if (data.user) {
+        const { error: profileError } = await supabase
+          .from('user_profiles')
+          .insert({
+            id: data.user.id,
+            full_name: fullName.trim(),
+          });
+
+        if (profileError) throw profileError;
+
         setSuccess(true);
         setTimeout(() => {
           onClose();
@@ -130,6 +145,24 @@ export function Signup({ onClose, onSwitchToLogin }: SignupProps) {
               )}
 
               <form onSubmit={handleEmailSignup} className="space-y-4">
+                <div>
+                  <label htmlFor="fullName" className="block text-sm font-medium text-black mb-2">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-black/40" />
+                    <input
+                      id="fullName"
+                      type="text"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="John Doe"
+                      required
+                      className="w-full pl-11 pr-4 py-3 glass-strong rounded-xl border-2 border-black/10 focus:outline-none focus:border-[#1552F0] focus:ring-4 focus:ring-[#1552F0]/20 transition-all text-black placeholder-black/40"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-black mb-2">
                     Email

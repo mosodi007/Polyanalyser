@@ -7,6 +7,7 @@ import { Login } from './components/Login';
 import { Signup } from './components/Signup';
 import { HomePage } from './pages/HomePage';
 import { SearchResultsPage } from './pages/SearchResultsPage';
+import { HistoryPage } from './pages/HistoryPage';
 import { supabase } from './lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
@@ -16,8 +17,11 @@ function App() {
   const [showSignup, setShowSignup] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        await ensureUserProfile(session.user);
+      }
     });
 
     const {
@@ -25,11 +29,33 @@ function App() {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       (async () => {
         setUser(session?.user ?? null);
+        if (session?.user) {
+          await ensureUserProfile(session.user);
+        }
       })();
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const ensureUserProfile = async (user: User) => {
+    const { data: existingProfile } = await supabase
+      .from('user_profiles')
+      .select('id')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!existingProfile) {
+      const fullName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+
+      await supabase
+        .from('user_profiles')
+        .insert({
+          id: user.id,
+          full_name: fullName,
+        });
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -52,6 +78,7 @@ function App() {
               />
             }
           />
+          <Route path="/history" element={<HistoryPage user={user} />} />
         </Routes>
       </main>
 
