@@ -84,7 +84,7 @@ export function DowngradeModal({
             </div>
 
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl transform -rotate-1 opacity-20" />
+              <div className="absolute inset-0 bg-slate-500 rounded-2xl transform -rotate-1 opacity-20" />
               <div className="relative bg-white rounded-2xl p-5 border border-orange-200 shadow-lg">
                 <p className="text-xs uppercase tracking-wider text-orange-600 mb-1">Downgrading to</p>
                 <p className="text-xl font-bold text-gray-900">{newPlanName}</p>
