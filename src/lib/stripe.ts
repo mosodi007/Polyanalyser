@@ -24,6 +24,7 @@ export async function createCheckoutSession(params: CreateCheckoutSessionParams)
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${session.access_token}`,
+      'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
     },
     body: JSON.stringify({
       price_id: params.priceId,
@@ -34,8 +35,14 @@ export async function createCheckoutSession(params: CreateCheckoutSessionParams)
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to create checkout session');
+    let errorMessage = 'Failed to create checkout session';
+    try {
+      const error = await response.json();
+      errorMessage = error.error || errorMessage;
+    } catch {
+      errorMessage = `Server error (${response.status}): ${response.statusText}`;
+    }
+    throw new Error(errorMessage);
   }
 
   return response.json();
@@ -68,6 +75,7 @@ export async function updateSubscription(newPriceId: string): Promise<UpdateSubs
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${session.access_token}`,
+      'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
     },
     body: JSON.stringify({
       newPriceId,
@@ -75,11 +83,23 @@ export async function updateSubscription(newPriceId: string): Promise<UpdateSubs
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to update subscription');
+    let errorMessage = 'Failed to update subscription';
+    try {
+      const error = await response.json();
+      errorMessage = error.error || errorMessage;
+    } catch {
+      errorMessage = `Server error (${response.status}): ${response.statusText}`;
+    }
+    throw new Error(errorMessage);
   }
 
-  return response.json();
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.error || 'Failed to update subscription');
+  }
+
+  return result;
 }
 
 interface PreviewUpgradeResponse {
@@ -106,6 +126,7 @@ export async function previewUpgrade(newPriceId: string): Promise<PreviewUpgrade
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${session.access_token}`,
+      'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
     },
     body: JSON.stringify({
       newPriceId,
@@ -113,9 +134,21 @@ export async function previewUpgrade(newPriceId: string): Promise<PreviewUpgrade
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to preview upgrade');
+    let errorMessage = 'Failed to preview upgrade';
+    try {
+      const error = await response.json();
+      errorMessage = error.error || errorMessage;
+    } catch {
+      errorMessage = `Server error (${response.status}): ${response.statusText}`;
+    }
+    throw new Error(errorMessage);
   }
 
-  return response.json();
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.error || 'Failed to preview upgrade');
+  }
+
+  return result;
 }

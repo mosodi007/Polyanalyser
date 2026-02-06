@@ -50,10 +50,19 @@ export function PricingSection() {
         }
       } catch (error) {
         console.error('Preview upgrade error:', error);
-        setMessage({
-          type: 'error',
-          text: error instanceof Error ? error.message : 'Failed to calculate upgrade cost'
-        });
+        const errorMessage = error instanceof Error ? error.message : 'Failed to calculate upgrade cost';
+
+        if (errorMessage.includes('No active subscription') || errorMessage.includes('Customer not found') || errorMessage.includes('401')) {
+          setMessage({
+            type: 'error',
+            text: 'You need an active subscription to upgrade. Please purchase a plan first.'
+          });
+        } else {
+          setMessage({
+            type: 'error',
+            text: errorMessage
+          });
+        }
       } finally {
         setLoading(null);
       }
