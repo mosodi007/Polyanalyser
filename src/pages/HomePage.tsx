@@ -146,7 +146,7 @@ export function HomePage() {
           </p>
         </div>
 
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           {faqs.map((faq, index) => (
             <div
               key={index}
@@ -170,7 +170,7 @@ export function HomePage() {
               )}
             </div>
           ))}
-        </div>
+        </div> */}
 
         
       </div>
