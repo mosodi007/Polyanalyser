@@ -22,6 +22,7 @@ export function SignupForm() {
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/verify-email`,
           data: {
             full_name: fullName,
           },
@@ -30,8 +31,10 @@ export function SignupForm() {
 
       if (error) {
         setMessage({ type: 'error', text: error.message });
-      } else if (data.user) {
-        // Create user profile
+        return;
+      }
+
+      if (data.user) {
         const { error: profileError } = await supabase
           .from('user_profiles')
           .insert([
@@ -45,10 +48,46 @@ export function SignupForm() {
           console.error('Error creating profile:', profileError);
         }
 
-        setMessage({ type: 'success', text: 'Account created successfully!' });
-        navigate('/');
+        const token = crypto.randomUUID();
+
+        const { error: tokenError } = await supabase
+          .from('email_verification_tokens')
+          .insert([
+            {
+              user_id: data.user.id,
+              token,
+              email,
+            },
+          ]);
+
+        if (tokenError) {
+          console.error('Error creating verification token:', tokenError);
+          setMessage({ type: 'error', text: 'Failed to create verification token' });
+          return;
+        }
+
+        const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-confirmation-email`;
+        const headers = {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        };
+
+        const emailResponse = await fetch(apiUrl, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ email, token }),
+        });
+
+        if (!emailResponse.ok) {
+          console.error('Failed to send confirmation email');
+          setMessage({ type: 'error', text: 'Failed to send confirmation email' });
+          return;
+        }
+
+        navigate('/confirmation-sent', { state: { email } });
       }
     } catch (error) {
+      console.error('Signup error:', error);
       setMessage({ type: 'error', text: 'An unexpected error occurred' });
     } finally {
       setLoading(false);

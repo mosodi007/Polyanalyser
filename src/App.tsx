@@ -14,6 +14,8 @@ import { PricingPage } from './pages/PricingPage';
 import { SuccessPage } from './pages/SuccessPage';
 import { AccountPage } from './pages/AccountPage';
 import { StripeTestPage } from './pages/StripeTestPage';
+import ConfirmationSentPage from './pages/ConfirmationSentPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
 import { supabase } from './lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
@@ -98,6 +100,8 @@ function App() {
           <Route path="/history" element={<HistoryPage user={user} />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/confirmation-sent" element={<ConfirmationSentPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/account" element={<AccountPage />} />
