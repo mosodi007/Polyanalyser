@@ -68,7 +68,7 @@ export function PricingCard({ product, onSelect, loading = false, popular = fals
           disabled={loading || isCurrentTier}
           className={`mt-8 w-full py-3.5 px-6 rounded-lg font-semibold transition-all ${
             isCurrentTier
-              ? 'bg-[#000] text-white cursor-default'
+              ? 'bg-slate-40 text-white cursor-default'
               : isDowngrade
               ? 'bg-slate-800 text-white hover:slate-500 shadow-md hover:shadow-lg disabled:from-orange-400 disabled:to-red-400'
               : isUpgrade
